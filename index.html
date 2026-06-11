@@ -6,9 +6,7 @@
 <title>JULEELAND</title>
 
 <style>
-  :root {
-    --cycle: 16s;
-  }
+  :root { --cycle: 16s; }
 
   body {
     margin: 0;
@@ -27,18 +25,20 @@
     padding: 24px;
   }
 
+  .hidden { display: none; }
+
   h1 {
     letter-spacing: 0.12em;
     font-size: clamp(2rem, 7vw, 4.8rem);
-    margin: 0 0 12px;
+    margin: 0 0 24px;
     font-weight: 700;
   }
 
-  .line {
-    font-size: clamp(.95rem, 3vw, 1.25rem);
+  .story-text {
+    font-size: clamp(1.15rem, 4vw, 1.55rem);
     font-style: italic;
-    margin-bottom: 38px;
-    line-height: 1.35;
+    line-height: 1.5;
+    margin-bottom: 34px;
   }
 
   svg {
@@ -47,7 +47,7 @@
     overflow: visible;
   }
 
-  .stem, .seed, .puff {
+  .stem, .seed {
     fill: none;
     stroke: #111;
     stroke-width: 3;
@@ -96,11 +96,69 @@
     font-size: 1rem;
     letter-spacing: .12em;
     cursor: pointer;
+    font-family: Georgia, serif;
   }
 
   button:hover {
     background: #111;
     color: #fbfaf4;
+  }
+
+  .seed-registry {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+    border: 2px solid #111;
+    border-radius: 50%;
+    background: #fbfaf4;
+    cursor: pointer;
+    font-size: 22px;
+    z-index: 10;
+  }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(251,250,244,.94);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    padding: 24px;
+  }
+
+  .modal.open { display: flex; }
+
+  .modal-box {
+    max-width: 420px;
+    border: 2px solid #111;
+    padding: 28px;
+    background: #fbfaf4;
+  }
+
+  .modal-box h2 {
+    letter-spacing: .1em;
+    margin-top: 0;
+  }
+
+  .modal-box input,
+  .modal-box select {
+    width: 100%;
+    margin: 8px 0;
+    padding: 12px;
+    border: 1px solid #111;
+    background: #fff;
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  .small {
+    font-size: .82rem;
+    line-height: 1.4;
+    margin-top: 12px;
   }
 
   @keyframes sway {
@@ -114,163 +172,169 @@
   }
 
   @keyframes attachedSeed {
-    0%, 7% {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    10%, 82% {
-      opacity: 0;
-      transform: scale(.12);
-    }
-
-    92%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
+    0%, 7% { opacity: 1; transform: scale(1); }
+    10%, 82% { opacity: 0; transform: scale(.12); }
+    92%, 100% { opacity: 1; transform: scale(1); }
   }
 
   @keyframes floatAway {
-    0%, 7% {
-      opacity: 0;
-      transform: translate(0,0) rotate(0deg) scale(1);
-    }
-
-    10% {
-      opacity: 1;
-    }
-
-    38% {
-      opacity: .8;
-      transform: translate(42px,-72px) rotate(-8deg) scale(.92);
-    }
-
-    66% {
-      opacity: .28;
-      transform: translate(96px,-155px) rotate(15deg) scale(.62);
-    }
-
-    84%, 100% {
-      opacity: 0;
-      transform: translate(155px,-245px) rotate(34deg) scale(.22);
-    }
+    0%, 7% { opacity: 0; transform: translate(0,0) rotate(0deg) scale(1); }
+    10% { opacity: 1; }
+    38% { opacity: .8; transform: translate(42px,-72px) rotate(-8deg) scale(.92); }
+    66% { opacity: .28; transform: translate(96px,-155px) rotate(15deg) scale(.62); }
+    84%, 100% { opacity: 0; transform: translate(155px,-245px) rotate(34deg) scale(.22); }
   }
 </style>
 </head>
 
 <body>
-  <main class="wrap">
+
+<button class="seed-registry" onclick="openSeedRegistry()" title="Seed Registry">✦</button>
+
+<div class="modal" id="seedModal">
+  <div class="modal-box">
+    <h2>THE SEED REGISTRY</h2>
+    <p>The road remembers some travelers. Most are forgotten.</p>
+
+    <input type="text" placeholder="What name shall JULEELAND know you by?" />
+    <input type="email" placeholder="Email address" />
+
+    <select>
+      <option>Choose your Seedlight</option>
+      <option>Wonder</option>
+      <option>Memory</option>
+      <option>Dreams</option>
+      <option>Courage</option>
+      <option>Mischief</option>
+    </select>
+
+    <button onclick="fakeSignup()">PLANT MY SEED</button>
+    <button onclick="closeSeedRegistry()">CLOSE</button>
+
+    <p class="small">
+      Placeholder only. Later this will connect to your Google Form or mailing list.
+    </p>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section id="landing">
+    <div id="dandelionArt"></div>
+    <button onclick="showIntro()">BEGIN THE DRIFT</button>
+  </section>
+
+  <section id="intro" class="hidden">
     <h1>JULEELAND</h1>
-
-    <div class="line">
-      You don’t play JULEELAND.<br />
-      You remember your way into it.
+    <div class="story-text">
+      Some roads are walked.<br>
+      Some are remembered.<br>
+      JULEELAND is neither.
     </div>
+    <button onclick="showFirstScene()">CONTINUE</button>
+  </section>
 
-    <svg viewBox="0 0 520 560" aria-label="Animated black line dandelion">
-      <g class="dandelion">
-        <path class="stem" d="M250 485 C240 395, 245 300, 260 220" />
-        <path class="stem" d="M248 405 C205 370, 182 338, 158 300" />
-        <path class="stem" d="M252 390 C300 360, 330 322, 358 285" />
+  <section id="firstScene" class="hidden">
+    <div class="story-text">
+      A drifting seed lands in your hand.<br>
+      It feels strangely familiar.
+    </div>
+    <button onclick="alert('Soon: Follow the seed.')">FOLLOW THE SEED</button>
+    <button onclick="alert('Soon: Let it go.')">LET IT GO</button>
+    <button onclick="alert('Soon: Ask where it came from.')">ASK WHERE IT CAME FROM</button>
+  </section>
 
-        <g class="core-group">
-          <circle class="core" cx="260" cy="205" r="18" />
-        </g>
-
-        <g class="attached-seed seed-1" style="transform-origin:260px 118px;">
-          <line class="seed" x1="260" y1="205" x2="260" y2="120" />
-          <circle class="seed" cx="260" cy="118" r="7" />
-        </g>
-
-        <g class="attached-seed seed-2" style="transform-origin:208px 138px;">
-          <line class="seed" x1="260" y1="205" x2="210" y2="140" />
-          <circle class="seed" cx="208" cy="138" r="7" />
-        </g>
-
-        <g class="attached-seed seed-3" style="transform-origin:312px 138px;">
-          <line class="seed" x1="260" y1="205" x2="310" y2="140" />
-          <circle class="seed" cx="312" cy="138" r="7" />
-        </g>
-
-        <g class="attached-seed seed-4" style="transform-origin:178px 205px;">
-          <line class="seed" x1="260" y1="205" x2="180" y2="205" />
-          <circle class="seed" cx="178" cy="205" r="7" />
-        </g>
-
-        <g class="attached-seed seed-5" style="transform-origin:342px 205px;">
-          <line class="seed" x1="260" y1="205" x2="340" y2="205" />
-          <circle class="seed" cx="342" cy="205" r="7" />
-        </g>
-
-        <g class="attached-seed seed-6" style="transform-origin:203px 262px;">
-          <line class="seed" x1="260" y1="205" x2="205" y2="260" />
-          <circle class="seed" cx="203" cy="262" r="7" />
-        </g>
-
-        <g class="attached-seed seed-7" style="transform-origin:317px 262px;">
-          <line class="seed" x1="260" y1="205" x2="315" y2="260" />
-          <circle class="seed" cx="317" cy="262" r="7" />
-        </g>
-      </g>
-
-      <g class="float-seed seed-1">
-        <path class="seed" d="M260 120 C278 70, 318 35, 370 10" />
-        <circle class="seed" cx="374" cy="7" r="6" />
-        <path class="seed" d="M374 7 C365 3, 361 -5, 360 -12" />
-        <path class="seed" d="M374 7 C382 -1, 390 -3, 398 -6" />
-      </g>
-
-      <g class="float-seed seed-2">
-        <path class="seed" d="M208 138 C230 90, 265 50, 310 20" />
-        <circle class="seed" cx="315" cy="17" r="6" />
-        <path class="seed" d="M315 17 C307 11, 304 4, 302 -3" />
-        <path class="seed" d="M315 17 C323 10, 331 8, 338 5" />
-      </g>
-
-      <g class="float-seed seed-3">
-        <path class="seed" d="M312 138 C350 100, 392 60, 440 30" />
-        <circle class="seed" cx="445" cy="27" r="6" />
-        <path class="seed" d="M445 27 C437 21, 434 14, 432 7" />
-        <path class="seed" d="M445 27 C453 19, 461 17, 468 14" />
-      </g>
-
-      <g class="float-seed seed-4">
-        <path class="seed" d="M178 205 C205 155, 245 110, 285 70" />
-        <circle class="seed" cx="290" cy="66" r="6" />
-        <path class="seed" d="M290 66 C282 61, 278 54, 276 47" />
-        <path class="seed" d="M290 66 C297 58, 305 55, 313 53" />
-      </g>
-
-      <g class="float-seed seed-5">
-        <path class="seed" d="M342 205 C390 170, 430 125, 465 78" />
-        <circle class="seed" cx="469" cy="73" r="6" />
-        <path class="seed" d="M469 73 C461 68, 457 61, 455 54" />
-        <path class="seed" d="M469 73 C477 65, 485 62, 492 60" />
-      </g>
-
-      <g class="float-seed seed-6">
-        <path class="seed" d="M203 262 C230 210, 270 160, 320 115" />
-        <circle class="seed" cx="325" cy="111" r="6" />
-        <path class="seed" d="M325 111 C317 106, 313 99, 311 92" />
-        <path class="seed" d="M325 111 C333 103, 341 101, 348 98" />
-      </g>
-
-      <g class="float-seed seed-7">
-        <path class="seed" d="M317 262 C365 225, 410 175, 455 125" />
-        <circle class="seed" cx="459" cy="120" r="6" />
-        <path class="seed" d="M459 120 C451 115, 447 108, 445 101" />
-        <path class="seed" d="M459 120 C467 112, 475 109, 482 107" />
-      </g>
-    </svg>
-
-    <br />
-    <button onclick="beginDrift()">BEGIN THE DRIFT</button>
-  </main>
+</main>
 
 <script>
-function beginDrift() {
-  alert("The seed heard you. The road remembers.");
+const dandelionSVG = `
+<svg viewBox="0 0 520 560" aria-label="Animated black line dandelion">
+  <g class="dandelion">
+    <path class="stem" d="M250 485 C240 395, 245 300, 260 220" />
+    <path class="stem" d="M248 405 C205 370, 182 338, 158 300" />
+    <path class="stem" d="M252 390 C300 360, 330 322, 358 285" />
+
+    <g class="core-group">
+      <circle class="core" cx="260" cy="205" r="18" />
+    </g>
+
+    <g class="attached-seed seed-1" style="transform-origin:260px 118px;">
+      <line class="seed" x1="260" y1="205" x2="260" y2="120" />
+      <circle class="seed" cx="260" cy="118" r="7" />
+    </g>
+
+    <g class="attached-seed seed-2" style="transform-origin:208px 138px;">
+      <line class="seed" x1="260" y1="205" x2="210" y2="140" />
+      <circle class="seed" cx="208" cy="138" r="7" />
+    </g>
+
+    <g class="attached-seed seed-3" style="transform-origin:312px 138px;">
+      <line class="seed" x1="260" y1="205" x2="310" y2="140" />
+      <circle class="seed" cx="312" cy="138" r="7" />
+    </g>
+
+    <g class="attached-seed seed-4" style="transform-origin:178px 205px;">
+      <line class="seed" x1="260" y1="205" x2="180" y2="205" />
+      <circle class="seed" cx="178" cy="205" r="7" />
+    </g>
+
+    <g class="attached-seed seed-5" style="transform-origin:342px 205px;">
+      <line class="seed" x1="260" y1="205" x2="340" y2="205" />
+      <circle class="seed" cx="342" cy="205" r="7" />
+    </g>
+
+    <g class="attached-seed seed-6" style="transform-origin:203px 262px;">
+      <line class="seed" x1="260" y1="205" x2="205" y2="260" />
+      <circle class="seed" cx="203" cy="262" r="7" />
+    </g>
+
+    <g class="attached-seed seed-7" style="transform-origin:317px 262px;">
+      <line class="seed" x1="260" y1="205" x2="315" y2="260" />
+      <circle class="seed" cx="317" cy="262" r="7" />
+    </g>
+  </g>
+
+  <g class="float-seed seed-1"><path class="seed" d="M260 120 C278 70, 318 35, 370 10" /><circle class="seed" cx="374" cy="7" r="6" /></g>
+  <g class="float-seed seed-2"><path class="seed" d="M208 138 C230 90, 265 50, 310 20" /><circle class="seed" cx="315" cy="17" r="6" /></g>
+  <g class="float-seed seed-3"><path class="seed" d="M312 138 C350 100, 392 60, 440 30" /><circle class="seed" cx="445" cy="27" r="6" /></g>
+  <g class="float-seed seed-4"><path class="seed" d="M178 205 C205 155, 245 110, 285 70" /><circle class="seed" cx="290" cy="66" r="6" /></g>
+  <g class="float-seed seed-5"><path class="seed" d="M342 205 C390 170, 430 125, 465 78" /><circle class="seed" cx="469" cy="73" r="6" /></g>
+  <g class="float-seed seed-6"><path class="seed" d="M203 262 C230 210, 270 160, 320 115" /><circle class="seed" cx="325" cy="111" r="6" /></g>
+  <g class="float-seed seed-7"><path class="seed" d="M317 262 C365 225, 410 175, 455 125" /><circle class="seed" cx="459" cy="120" r="6" /></g>
+</svg>
+`;
+
+document.getElementById("dandelionArt").innerHTML = dandelionSVG;
+
+function hideAll() {
+  document.getElementById("landing").classList.add("hidden");
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("firstScene").classList.add("hidden");
+}
+
+function showIntro() {
+  hideAll();
+  document.getElementById("intro").classList.remove("hidden");
+}
+
+function showFirstScene() {
+  hideAll();
+  document.getElementById("firstScene").classList.remove("hidden");
+}
+
+function openSeedRegistry() {
+  document.getElementById("seedModal").classList.add("open");
+}
+
+function closeSeedRegistry() {
+  document.getElementById("seedModal").classList.remove("open");
+}
+
+function fakeSignup() {
+  alert("A Wish Keeper has recorded your journey.");
+  closeSeedRegistry();
 }
 </script>
+
 </body>
 </html>
