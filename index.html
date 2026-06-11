@@ -57,7 +57,7 @@
     overflow: visible;
   }
 
-  .stem, .seed, .trail {
+  .stem, .seed, .trail, .fluff {
     fill: none;
     stroke: currentColor;
     stroke-width: 3;
@@ -66,8 +66,16 @@
   }
 
   .trail {
-    opacity: .22;
+    opacity: .18;
     stroke-width: 2;
+  }
+
+  .fluff {
+    stroke-width: 2.4;
+  }
+
+  .ghost {
+    opacity: .18;
   }
 
   .core {
@@ -82,20 +90,16 @@
   }
 
   .core-group {
-    animation: tremble 2.8s ease-in-out infinite;
+    animation: pulseCore 2.8s ease-in-out infinite;
   }
 
-  .attached-seed {
-    animation: attachedStay var(--cycle) linear infinite;
-  }
-
-  .attached-seed.a1 { animation-name: attached1; }
-  .attached-seed.a2 { animation-name: attached2; }
-  .attached-seed.a3 { animation-name: attached3; }
-  .attached-seed.a4 { animation-name: attached4; }
-  .attached-seed.a5 { animation-name: attached5; }
-  .attached-seed.a6 { animation-name: attached6; }
-  .attached-seed.a7 { animation-name: attached7; }
+  .attached-seed.a1 { animation: attached1 var(--cycle) linear infinite; }
+  .attached-seed.a2 { animation: attached2 var(--cycle) linear infinite; }
+  .attached-seed.a3 { animation: attached3 var(--cycle) linear infinite; }
+  .attached-seed.a4 { animation: attached4 var(--cycle) linear infinite; }
+  .attached-seed.a5 { animation: attached5 var(--cycle) linear infinite; }
+  .attached-seed.a6 { animation: attached6 var(--cycle) linear infinite; }
+  .attached-seed.a7 { animation: attached7 var(--cycle) linear infinite; }
 
   .float-seed {
     opacity: 0;
@@ -209,9 +213,9 @@
     50% { transform: rotate(1.8deg); }
   }
 
-  @keyframes tremble {
-    0%, 100% { transform: translate(0,0); }
-    50% { transform: translate(1px,-1px); }
+  @keyframes pulseCore {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(1px,-1px) scale(1.08); }
   }
 
   @keyframes attached1 {
@@ -368,6 +372,24 @@
 </main>
 
 <script>
+const floatingSeed = (x, y) => `
+  <g>
+    <path class="trail" d="M${x} ${y} C${x - 12} ${y - 40}, ${x + 18} ${y - 78}, ${x + 48} ${y - 118}" />
+
+    <g class="ghost">
+      <line class="fluff" x1="${x}" y1="${y - 8}" x2="${x}" y2="${y - 24}" />
+      <line class="fluff" x1="${x}" y1="${y - 8}" x2="${x - 12}" y2="${y - 20}" />
+      <line class="fluff" x1="${x}" y1="${y - 8}" x2="${x + 12}" y2="${y - 20}" />
+      <circle class="seed" cx="${x}" cy="${y}" r="5" />
+    </g>
+
+    <line class="fluff" x1="${x}" y1="${y - 5}" x2="${x}" y2="${y - 22}" />
+    <line class="fluff" x1="${x}" y1="${y - 5}" x2="${x - 13}" y2="${y - 17}" />
+    <line class="fluff" x1="${x}" y1="${y - 5}" x2="${x + 13}" y2="${y - 17}" />
+    <circle class="seed" cx="${x}" cy="${y}" r="6" />
+  </g>
+`;
+
 const dandelionSVG = `
 <svg viewBox="0 0 520 620" aria-label="Animated black line dandelion">
   <g class="dandelion">
@@ -415,40 +437,13 @@ const dandelionSVG = `
     </g>
   </g>
 
-  <g class="float-seed f1">
-    <path class="trail" d="M260 120 C255 84, 276 46, 310 12" />
-    <circle class="seed" cx="260" cy="118" r="6" />
-  </g>
-
-  <g class="float-seed f2">
-    <path class="trail" d="M208 138 C185 92, 210 50, 248 16" />
-    <circle class="seed" cx="208" cy="138" r="6" />
-  </g>
-
-  <g class="float-seed f3">
-    <path class="trail" d="M312 138 C355 96, 390 54, 430 18" />
-    <circle class="seed" cx="312" cy="138" r="6" />
-  </g>
-
-  <g class="float-seed f4">
-    <path class="trail" d="M178 205 C150 160, 176 102, 220 55" />
-    <circle class="seed" cx="178" cy="205" r="6" />
-  </g>
-
-  <g class="float-seed f5">
-    <path class="trail" d="M342 205 C388 170, 426 115, 462 62" />
-    <circle class="seed" cx="342" cy="205" r="6" />
-  </g>
-
-  <g class="float-seed f6">
-    <path class="trail" d="M203 262 C172 212, 205 145, 260 94" />
-    <circle class="seed" cx="203" cy="262" r="6" />
-  </g>
-
-  <g class="float-seed f7">
-    <path class="trail" d="M317 262 C362 218, 412 158, 458 102" />
-    <circle class="seed" cx="317" cy="262" r="6" />
-  </g>
+  <g class="float-seed f1">${floatingSeed(260,118)}</g>
+  <g class="float-seed f2">${floatingSeed(208,138)}</g>
+  <g class="float-seed f3">${floatingSeed(312,138)}</g>
+  <g class="float-seed f4">${floatingSeed(178,205)}</g>
+  <g class="float-seed f5">${floatingSeed(342,205)}</g>
+  <g class="float-seed f6">${floatingSeed(203,262)}</g>
+  <g class="float-seed f7">${floatingSeed(317,262)}</g>
 </svg>
 `;
 
