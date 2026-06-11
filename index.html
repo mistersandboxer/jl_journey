@@ -24,24 +24,25 @@
   }
 
   h1 {
-    letter-spacing: 0.18em;
-    font-size: clamp(2rem, 8vw, 4.5rem);
-    margin: 0 0 10px;
+    letter-spacing: 0.12em;
+    font-size: clamp(2rem, 7vw, 4.8rem);
+    margin: 0 0 12px;
+    font-weight: 700;
   }
 
   .line {
-    font-size: clamp(1rem, 4vw, 1.4rem);
+    font-size: clamp(.9rem, 2.8vw, 1.2rem);
     font-style: italic;
-    margin-bottom: 28px;
+    margin-bottom: 42px;
   }
 
   svg {
-    width: min(88vw, 520px);
+    width: min(74vw, 430px);
     height: auto;
     overflow: visible;
   }
 
-  .stem, .seed, .wind, .puff {
+  .stem, .seed, .puff {
     fill: none;
     stroke: #111;
     stroke-width: 3;
@@ -50,28 +51,38 @@
   }
 
   .dandelion {
-    animation: sway 4s ease-in-out infinite;
-    transform-origin: 250px 430px;
+    animation: sway 4.5s ease-in-out infinite;
+    transform-origin: 250px 455px;
   }
 
-  .wind {
-    animation: windMove 3s linear infinite;
-    opacity: .65;
+  .puff {
+    animation: tremble 2.4s ease-in-out infinite;
   }
 
-  .wind.two { animation-delay: .8s; }
-  .wind.three { animation-delay: 1.5s; }
+  .attached-seed.release-one {
+    animation: vanishSeed 5s ease-in-out infinite;
+    transform-origin: 340px 205px;
+  }
+
+  .attached-seed.release-two {
+    animation: vanishSeed 5s ease-in-out infinite;
+    animation-delay: 1.2s;
+    transform-origin: 312px 138px;
+  }
+
+  .attached-seed.release-three {
+    animation: vanishSeed 5s ease-in-out infinite;
+    animation-delay: 2.1s;
+    transform-origin: 317px 262px;
+  }
 
   .loose-seed {
+    opacity: 0;
     animation: floatSeed 5s ease-in-out infinite;
   }
 
-  .loose-seed.two { animation-delay: 1s; }
-  .loose-seed.three { animation-delay: 2s; }
-
-  .puff {
-    animation: tremble 2s ease-in-out infinite;
-  }
+  .loose-seed.two { animation-delay: 1.2s; }
+  .loose-seed.three { animation-delay: 2.1s; }
 
   button {
     margin-top: 30px;
@@ -93,21 +104,22 @@
     50% { transform: rotate(2deg); }
   }
 
-  @keyframes windMove {
-    0% { transform: translateX(-20px); opacity: 0; }
-    30% { opacity: .7; }
-    100% { transform: translateX(80px); opacity: 0; }
+  @keyframes tremble {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(1.5px,-1.5px); }
+  }
+
+  @keyframes vanishSeed {
+    0%, 35% { opacity: 1; transform: scale(1); }
+    45%, 88% { opacity: 0; transform: scale(.25); }
+    100% { opacity: 1; transform: scale(1); }
   }
 
   @keyframes floatSeed {
-    0% { transform: translate(0,0) rotate(0deg); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translate(95px,-80px) rotate(25deg); opacity: 0; }
-  }
-
-  @keyframes tremble {
-    0%, 100% { transform: translate(0,0); }
-    50% { transform: translate(2px,-2px); }
+    0%, 34% { opacity: 0; transform: translate(0,0) rotate(0deg); }
+    45% { opacity: 1; }
+    65% { transform: translate(45px,-35px) rotate(-8deg); }
+    100% { opacity: 0; transform: translate(125px,-95px) rotate(22deg); }
   }
 </style>
 </head>
@@ -118,10 +130,6 @@
     <div class="line">“You don’t play JULEELAND. You remember your way into it.”</div>
 
     <svg viewBox="0 0 520 520" aria-label="Animated black line dandelion">
-      <path class="wind" d="M40 180 C120 155, 170 190, 245 165" />
-      <path class="wind two" d="M20 245 C110 220, 180 255, 275 230" />
-      <path class="wind three" d="M75 315 C150 290, 225 320, 330 295" />
-
       <g class="dandelion">
         <path class="stem" d="M250 455 C240 370, 245 295, 260 220" />
         <path class="stem" d="M248 380 C205 345, 185 320, 160 285" />
@@ -132,35 +140,50 @@
         <g class="puff">
           <line x1="260" y1="205" x2="260" y2="120" />
           <line x1="260" y1="205" x2="210" y2="140" />
-          <line x1="260" y1="205" x2="310" y2="140" />
           <line x1="260" y1="205" x2="180" y2="205" />
-          <line x1="260" y1="205" x2="340" y2="205" />
           <line x1="260" y1="205" x2="205" y2="260" />
-          <line x1="260" y1="205" x2="315" y2="260" />
 
           <circle cx="260" cy="118" r="7" />
           <circle cx="208" cy="138" r="7" />
-          <circle cx="312" cy="138" r="7" />
           <circle cx="178" cy="205" r="7" />
-          <circle cx="342" cy="205" r="7" />
           <circle cx="203" cy="262" r="7" />
-          <circle cx="317" cy="262" r="7" />
+        </g>
+
+        <g class="attached-seed release-two">
+          <line class="seed" x1="260" y1="205" x2="310" y2="140" />
+          <circle class="seed" cx="312" cy="138" r="7" />
+        </g>
+
+        <g class="attached-seed release-one">
+          <line class="seed" x1="260" y1="205" x2="340" y2="205" />
+          <circle class="seed" cx="342" cy="205" r="7" />
+        </g>
+
+        <g class="attached-seed release-three">
+          <line class="seed" x1="260" y1="205" x2="315" y2="260" />
+          <circle class="seed" cx="317" cy="262" r="7" />
         </g>
       </g>
 
       <g class="loose-seed">
-        <line class="seed" x1="365" y1="130" x2="390" y2="95" />
-        <circle class="seed" cx="394" cy="90" r="6" />
+        <path class="seed" d="M342 205 C370 180, 395 148, 420 118" />
+        <circle class="seed" cx="424" cy="113" r="6" />
+        <path class="seed" d="M424 113 C416 108, 412 101, 410 94" />
+        <path class="seed" d="M424 113 C429 104, 437 101, 444 98" />
       </g>
 
       <g class="loose-seed two">
-        <line class="seed" x1="385" y1="210" x2="415" y2="180" />
-        <circle class="seed" cx="420" cy="175" r="6" />
+        <path class="seed" d="M312 138 C338 115, 365 91, 392 70" />
+        <circle class="seed" cx="397" cy="66" r="6" />
+        <path class="seed" d="M397 66 C389 61, 386 55, 384 48" />
+        <path class="seed" d="M397 66 C404 58, 411 55, 418 53" />
       </g>
 
       <g class="loose-seed three">
-        <line class="seed" x1="330" y1="285" x2="360" y2="250" />
-        <circle class="seed" cx="365" cy="245" r="6" />
+        <path class="seed" d="M317 262 C350 235, 382 208, 410 180" />
+        <circle class="seed" cx="415" cy="176" r="6" />
+        <path class="seed" d="M415 176 C407 170, 404 164, 402 157" />
+        <path class="seed" d="M415 176 C422 168, 430 165, 437 163" />
       </g>
     </svg>
 
