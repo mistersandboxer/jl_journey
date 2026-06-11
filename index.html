@@ -6,6 +6,10 @@
 <title>JULEELAND</title>
 
 <style>
+  :root {
+    --cycle: 16s;
+  }
+
   body {
     margin: 0;
     min-height: 100vh;
@@ -31,13 +35,14 @@
   }
 
   .line {
-    font-size: clamp(.9rem, 2.8vw, 1.2rem);
+    font-size: clamp(.95rem, 3vw, 1.25rem);
     font-style: italic;
-    margin-bottom: 42px;
+    margin-bottom: 38px;
+    line-height: 1.35;
   }
 
   svg {
-    width: min(74vw, 430px);
+    width: min(76vw, 440px);
     height: auto;
     overflow: visible;
   }
@@ -50,45 +55,44 @@
     stroke-linejoin: round;
   }
 
+  .core {
+    fill: none;
+    stroke: #111;
+    stroke-width: 3;
+  }
+
   .dandelion {
-    animation: sway 4.5s ease-in-out infinite;
+    animation: sway 4.8s ease-in-out infinite;
     transform-origin: 250px 455px;
   }
 
-  .puff {
-    animation: tremble 2.4s ease-in-out infinite;
+  .core-group {
+    animation: tremble 2.6s ease-in-out infinite;
   }
 
-  .attached-seed.release-one {
-    animation: vanishSeed 5s ease-in-out infinite;
-    transform-origin: 340px 205px;
+  .attached-seed {
+    animation: attachedSeed var(--cycle) ease-in-out infinite;
   }
 
-  .attached-seed.release-two {
-    animation: vanishSeed 5s ease-in-out infinite;
-    animation-delay: 1.2s;
-    transform-origin: 312px 138px;
-  }
-
-  .attached-seed.release-three {
-    animation: vanishSeed 5s ease-in-out infinite;
-    animation-delay: 2.1s;
-    transform-origin: 317px 262px;
-  }
-
-  .loose-seed {
+  .float-seed {
     opacity: 0;
-    animation: floatSeed 5s ease-in-out infinite;
+    animation: floatAway var(--cycle) ease-in-out infinite;
   }
 
-  .loose-seed.two { animation-delay: 1.2s; }
-  .loose-seed.three { animation-delay: 2.1s; }
+  .seed-1 { animation-delay: 0s; }
+  .seed-2 { animation-delay: 1.35s; }
+  .seed-3 { animation-delay: 2.7s; }
+  .seed-4 { animation-delay: 4.05s; }
+  .seed-5 { animation-delay: 5.4s; }
+  .seed-6 { animation-delay: 6.75s; }
+  .seed-7 { animation-delay: 8.1s; }
 
   button {
     margin-top: 30px;
     padding: 14px 26px;
     border: 2px solid #111;
     background: transparent;
+    color: #111;
     font-size: 1rem;
     letter-spacing: .12em;
     cursor: pointer;
@@ -109,17 +113,47 @@
     50% { transform: translate(1.5px,-1.5px); }
   }
 
-  @keyframes vanishSeed {
-    0%, 35% { opacity: 1; transform: scale(1); }
-    45%, 88% { opacity: 0; transform: scale(.25); }
-    100% { opacity: 1; transform: scale(1); }
+  @keyframes attachedSeed {
+    0%, 7% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    10%, 82% {
+      opacity: 0;
+      transform: scale(.12);
+    }
+
+    92%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
-  @keyframes floatSeed {
-    0%, 34% { opacity: 0; transform: translate(0,0) rotate(0deg); }
-    45% { opacity: 1; }
-    65% { transform: translate(45px,-35px) rotate(-8deg); }
-    100% { opacity: 0; transform: translate(125px,-95px) rotate(22deg); }
+  @keyframes floatAway {
+    0%, 7% {
+      opacity: 0;
+      transform: translate(0,0) rotate(0deg) scale(1);
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    38% {
+      opacity: .8;
+      transform: translate(42px,-72px) rotate(-8deg) scale(.92);
+    }
+
+    66% {
+      opacity: .28;
+      transform: translate(96px,-155px) rotate(15deg) scale(.62);
+    }
+
+    84%, 100% {
+      opacity: 0;
+      transform: translate(155px,-245px) rotate(34deg) scale(.22);
+    }
   }
 </style>
 </head>
@@ -127,63 +161,105 @@
 <body>
   <main class="wrap">
     <h1>JULEELAND</h1>
-    <div class="line">“You don’t play JULEELAND. You remember your way into it.”</div>
 
-    <svg viewBox="0 0 520 520" aria-label="Animated black line dandelion">
+    <div class="line">
+      You don’t play JULEELAND.<br />
+      You remember your way into it.
+    </div>
+
+    <svg viewBox="0 0 520 560" aria-label="Animated black line dandelion">
       <g class="dandelion">
-        <path class="stem" d="M250 455 C240 370, 245 295, 260 220" />
-        <path class="stem" d="M248 380 C205 345, 185 320, 160 285" />
-        <path class="stem" d="M252 365 C300 335, 330 305, 355 270" />
+        <path class="stem" d="M250 485 C240 395, 245 300, 260 220" />
+        <path class="stem" d="M248 405 C205 370, 182 338, 158 300" />
+        <path class="stem" d="M252 390 C300 360, 330 322, 358 285" />
 
-        <circle class="puff" cx="260" cy="205" r="18" />
-
-        <g class="puff">
-          <line x1="260" y1="205" x2="260" y2="120" />
-          <line x1="260" y1="205" x2="210" y2="140" />
-          <line x1="260" y1="205" x2="180" y2="205" />
-          <line x1="260" y1="205" x2="205" y2="260" />
-
-          <circle cx="260" cy="118" r="7" />
-          <circle cx="208" cy="138" r="7" />
-          <circle cx="178" cy="205" r="7" />
-          <circle cx="203" cy="262" r="7" />
+        <g class="core-group">
+          <circle class="core" cx="260" cy="205" r="18" />
         </g>
 
-        <g class="attached-seed release-two">
+        <g class="attached-seed seed-1" style="transform-origin:260px 118px;">
+          <line class="seed" x1="260" y1="205" x2="260" y2="120" />
+          <circle class="seed" cx="260" cy="118" r="7" />
+        </g>
+
+        <g class="attached-seed seed-2" style="transform-origin:208px 138px;">
+          <line class="seed" x1="260" y1="205" x2="210" y2="140" />
+          <circle class="seed" cx="208" cy="138" r="7" />
+        </g>
+
+        <g class="attached-seed seed-3" style="transform-origin:312px 138px;">
           <line class="seed" x1="260" y1="205" x2="310" y2="140" />
           <circle class="seed" cx="312" cy="138" r="7" />
         </g>
 
-        <g class="attached-seed release-one">
+        <g class="attached-seed seed-4" style="transform-origin:178px 205px;">
+          <line class="seed" x1="260" y1="205" x2="180" y2="205" />
+          <circle class="seed" cx="178" cy="205" r="7" />
+        </g>
+
+        <g class="attached-seed seed-5" style="transform-origin:342px 205px;">
           <line class="seed" x1="260" y1="205" x2="340" y2="205" />
           <circle class="seed" cx="342" cy="205" r="7" />
         </g>
 
-        <g class="attached-seed release-three">
+        <g class="attached-seed seed-6" style="transform-origin:203px 262px;">
+          <line class="seed" x1="260" y1="205" x2="205" y2="260" />
+          <circle class="seed" cx="203" cy="262" r="7" />
+        </g>
+
+        <g class="attached-seed seed-7" style="transform-origin:317px 262px;">
           <line class="seed" x1="260" y1="205" x2="315" y2="260" />
           <circle class="seed" cx="317" cy="262" r="7" />
         </g>
       </g>
 
-      <g class="loose-seed">
-        <path class="seed" d="M342 205 C370 180, 395 148, 420 118" />
-        <circle class="seed" cx="424" cy="113" r="6" />
-        <path class="seed" d="M424 113 C416 108, 412 101, 410 94" />
-        <path class="seed" d="M424 113 C429 104, 437 101, 444 98" />
+      <g class="float-seed seed-1">
+        <path class="seed" d="M260 120 C278 70, 318 35, 370 10" />
+        <circle class="seed" cx="374" cy="7" r="6" />
+        <path class="seed" d="M374 7 C365 3, 361 -5, 360 -12" />
+        <path class="seed" d="M374 7 C382 -1, 390 -3, 398 -6" />
       </g>
 
-      <g class="loose-seed two">
-        <path class="seed" d="M312 138 C338 115, 365 91, 392 70" />
-        <circle class="seed" cx="397" cy="66" r="6" />
-        <path class="seed" d="M397 66 C389 61, 386 55, 384 48" />
-        <path class="seed" d="M397 66 C404 58, 411 55, 418 53" />
+      <g class="float-seed seed-2">
+        <path class="seed" d="M208 138 C230 90, 265 50, 310 20" />
+        <circle class="seed" cx="315" cy="17" r="6" />
+        <path class="seed" d="M315 17 C307 11, 304 4, 302 -3" />
+        <path class="seed" d="M315 17 C323 10, 331 8, 338 5" />
       </g>
 
-      <g class="loose-seed three">
-        <path class="seed" d="M317 262 C350 235, 382 208, 410 180" />
-        <circle class="seed" cx="415" cy="176" r="6" />
-        <path class="seed" d="M415 176 C407 170, 404 164, 402 157" />
-        <path class="seed" d="M415 176 C422 168, 430 165, 437 163" />
+      <g class="float-seed seed-3">
+        <path class="seed" d="M312 138 C350 100, 392 60, 440 30" />
+        <circle class="seed" cx="445" cy="27" r="6" />
+        <path class="seed" d="M445 27 C437 21, 434 14, 432 7" />
+        <path class="seed" d="M445 27 C453 19, 461 17, 468 14" />
+      </g>
+
+      <g class="float-seed seed-4">
+        <path class="seed" d="M178 205 C205 155, 245 110, 285 70" />
+        <circle class="seed" cx="290" cy="66" r="6" />
+        <path class="seed" d="M290 66 C282 61, 278 54, 276 47" />
+        <path class="seed" d="M290 66 C297 58, 305 55, 313 53" />
+      </g>
+
+      <g class="float-seed seed-5">
+        <path class="seed" d="M342 205 C390 170, 430 125, 465 78" />
+        <circle class="seed" cx="469" cy="73" r="6" />
+        <path class="seed" d="M469 73 C461 68, 457 61, 455 54" />
+        <path class="seed" d="M469 73 C477 65, 485 62, 492 60" />
+      </g>
+
+      <g class="float-seed seed-6">
+        <path class="seed" d="M203 262 C230 210, 270 160, 320 115" />
+        <circle class="seed" cx="325" cy="111" r="6" />
+        <path class="seed" d="M325 111 C317 106, 313 99, 311 92" />
+        <path class="seed" d="M325 111 C333 103, 341 101, 348 98" />
+      </g>
+
+      <g class="float-seed seed-7">
+        <path class="seed" d="M317 262 C365 225, 410 175, 455 125" />
+        <circle class="seed" cx="459" cy="120" r="6" />
+        <path class="seed" d="M459 120 C451 115, 447 108, 445 101" />
+        <path class="seed" d="M459 120 C467 112, 475 109, 482 107" />
       </g>
     </svg>
 
