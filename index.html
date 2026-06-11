@@ -9,6 +9,7 @@
   :root {
     --cream: #fbfaf4;
     --black: #080808;
+    --pink: #ff5fc8;
     --cycle: 18s;
   }
 
@@ -51,6 +52,26 @@
     margin-bottom: 34px;
   }
 
+  .intro-line {
+    opacity: 0;
+    animation: revealLine 1.3s ease forwards;
+  }
+
+  .intro-line.one { animation-delay: .4s; }
+  .intro-line.two { animation-delay: 1.7s; }
+  .intro-line.three { animation-delay: 3s; }
+
+  .pink-word {
+    color: var(--pink);
+    text-shadow: 0 0 14px rgba(255,95,200,.6);
+  }
+
+  .intro-button {
+    opacity: 0;
+    animation: revealLine 1.2s ease forwards;
+    animation-delay: 4.6s;
+  }
+
   svg {
     width: min(76vw, 440px);
     height: auto;
@@ -84,13 +105,14 @@
     stroke-width: 3;
   }
 
-  .dandelion {
+  .stem-sway {
     animation: sway 5s ease-in-out infinite;
     transform-origin: 250px 515px;
   }
 
   .core-group {
-    animation: pulseCore 2.8s ease-in-out infinite;
+    animation: pulseCore 3.2s ease-in-out infinite;
+    transform-origin: 260px 205px;
   }
 
   .attached-seed.a1 { animation: attached1 var(--cycle) linear infinite; }
@@ -113,6 +135,14 @@
   .float-seed.f5 { animation-delay: 5.8s; }
   .float-seed.f6 { animation-delay: 7.25s; }
   .float-seed.f7 { animation-delay: 8.7s; }
+
+  .pink-seed {
+    width: 80px;
+    margin: 0 auto 26px;
+    color: var(--pink);
+    filter: drop-shadow(0 0 12px rgba(255,95,200,.75));
+    animation: pinkSeedFloat 5s ease-in-out infinite;
+  }
 
   button {
     margin-top: 30px;
@@ -148,6 +178,7 @@
     font-size: 22px;
     padding: 0;
     line-height: 1;
+    animation: tracePulse 3.5s ease-in-out infinite;
   }
 
   .modal {
@@ -183,6 +214,17 @@
     line-height: 1.35;
   }
 
+  .modal-box input {
+    width: 100%;
+    margin: 6px 0;
+    padding: 10px;
+    border: 1px solid #111;
+    background: #fff;
+    font-family: Georgia, serif;
+    font-size: .95rem;
+    box-sizing: border-box;
+  }
+
   .modal-box button {
     width: 100%;
     margin-top: 10px;
@@ -196,14 +238,29 @@
     margin-top: 12px !important;
   }
 
+  @keyframes revealLine {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes tracePulse {
+    0%, 100% { transform: scale(1); opacity: .75; }
+    50% { transform: scale(1.08); opacity: 1; }
+  }
+
+  @keyframes pinkSeedFloat {
+    0%, 100% { transform: translate(0,0) rotate(-4deg); opacity: .82; }
+    50% { transform: translate(18px,-18px) rotate(8deg); opacity: 1; }
+  }
+
   @keyframes sway {
-    0%, 100% { transform: rotate(-1.8deg); }
-    50% { transform: rotate(1.8deg); }
+    0%, 100% { transform: rotate(-.85deg); }
+    50% { transform: rotate(.85deg); }
   }
 
   @keyframes pulseCore {
-    0%, 100% { transform: translate(0,0) scale(1); }
-    50% { transform: translate(1px,-1px) scale(1.08); }
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.035); }
   }
 
   @keyframes attached1 {
@@ -270,14 +327,27 @@
     <p>Some travelers pass through quietly. Others leave something behind.</p>
     <p>Tell JULEELAND what to call you, and how the Wish Keepers may find you again.</p>
 
-    <button onclick="openTraceForm()">LEAVE MY TRACE</button>
+    <form 
+      action="https://docs.google.com/forms/d/e/1FAIpQLSdUoOszwW4t2PbtscqVss7tdasc43oqB_EJ_BuLqCLLHAbLxA/formResponse"
+      method="POST"
+      target="hidden_iframe"
+      onsubmit="traceSubmitted()"
+    >
+      <input name="entry.788416641" type="text" placeholder="Juno Name" required />
+      <input name="entry.1355479768" type="email" placeholder="Email" required />
+
+      <button type="submit">LEAVE MY TRACE</button>
+    </form>
+
     <button onclick="closeTraceModal()">CLOSE</button>
 
-    <p class="small">
-      You will be taken to a short JULEELAND form.
+    <p class="small" id="traceMessage">
+      Your trace stays between you and JULEELAND.
     </p>
   </div>
 </div>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 
 <main class="wrap">
 
@@ -292,30 +362,40 @@
   </section>
 
   <section id="intro" class="hidden">
-    <h1>JULEELAND</h1>
+    <div class="pink-seed" id="pinkSeedArt"></div>
+
     <div class="story-text">
-      Some doors open.<br>
-      Some skies split.<br>
-      JULEELAND waits behind the pink.
+      <div class="intro-line one">Some doors open.</div>
+      <div class="intro-line two">Some skies split.</div>
+      <div class="intro-line three">JULEELAND waits behind the <span class="pink-word">pink</span>.</div>
     </div>
-    <button onclick="showFirstScene()">CONTINUE</button>
+
+    <button class="intro-button" onclick="showFirstScene()">CONTINUE</button>
   </section>
 
   <section id="firstScene" class="hidden">
+    <div class="pink-seed" id="pinkSeedArtTwo"></div>
+
     <div class="story-text">
-      A trace appears in your palm.<br>
-      Somewhere above you, the sky turns pink.
+      A piece of the pink sky falls into your hand.<br>
+      It should be impossible.<br>
+      Yet here it is.
     </div>
-    <button onclick="alert('Soon: Follow the trace.')">FOLLOW THE TRACE</button>
-    <button onclick="alert('Soon: Hide your hand.')">HIDE YOUR HAND</button>
-    <button onclick="alert('Soon: Ask what found you.')">ASK WHAT FOUND YOU</button>
+
+    <button onclick="showEnding('follow')">FOLLOW IT</button>
+    <button onclick="showEnding('hide')">HIDE IT</button>
+    <button onclick="showEnding('ask')">ASK WHAT IT IS</button>
+  </section>
+
+  <section id="ending" class="hidden">
+    <div id="endingArt" class="pink-seed"></div>
+    <div class="story-text" id="endingText"></div>
+    <button onclick="openTraceModal()">LEAVE A TRACE</button>
   </section>
 
 </main>
 
 <script>
-const traceFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdUoOszwW4t2PbtscqVss7tdasc43oqB_EJ_BuLqCLLHAbLxA/viewform?usp=send_form";
-
 const floatingSeed = (x, y) => `
   <g>
     <path class="trail" d="M${x} ${y} C${x - 12} ${y - 40}, ${x + 18} ${y - 78}, ${x + 48} ${y - 118}" />
@@ -334,16 +414,22 @@ const floatingSeed = (x, y) => `
   </g>
 `;
 
+const pinkSeedSVG = `
+<svg viewBox="0 0 80 100" aria-label="floating pink sky fragment">
+  <path class="fluff" d="M40 38 L40 8" />
+  <path class="fluff" d="M40 38 L22 16" />
+  <path class="fluff" d="M40 38 L58 16" />
+  <circle class="seed" cx="40" cy="48" r="9" />
+  <path class="trail" d="M38 58 C25 73, 40 83, 30 96" />
+</svg>
+`;
+
 const dandelionSVG = `
 <svg viewBox="0 0 520 620" aria-label="Animated black line dandelion">
-  <g class="dandelion">
+  <g class="stem-sway">
     <path class="stem" d="M250 515 C240 420, 245 315, 260 220" />
     <path class="stem" d="M248 430 C205 390, 182 350, 158 310" />
     <path class="stem" d="M252 410 C300 375, 330 335, 358 295" />
-
-    <g class="core-group">
-      <circle class="core" cx="260" cy="205" r="18" />
-    </g>
 
     <g class="attached-seed a1" style="transform-origin:260px 118px;">
       <line class="seed" x1="260" y1="205" x2="260" y2="120" />
@@ -381,6 +467,10 @@ const dandelionSVG = `
     </g>
   </g>
 
+  <g class="core-group">
+    <circle class="core" cx="260" cy="205" r="18" />
+  </g>
+
   <g class="float-seed f1">${floatingSeed(260,118)}</g>
   <g class="float-seed f2">${floatingSeed(208,138)}</g>
   <g class="float-seed f3">${floatingSeed(312,138)}</g>
@@ -392,11 +482,15 @@ const dandelionSVG = `
 `;
 
 document.getElementById("dandelionArt").innerHTML = dandelionSVG;
+document.getElementById("pinkSeedArt").innerHTML = pinkSeedSVG;
+document.getElementById("pinkSeedArtTwo").innerHTML = pinkSeedSVG;
+document.getElementById("endingArt").innerHTML = pinkSeedSVG;
 
 function hideAll() {
   document.getElementById("landing").classList.add("hidden");
   document.getElementById("intro").classList.add("hidden");
   document.getElementById("firstScene").classList.add("hidden");
+  document.getElementById("ending").classList.add("hidden");
 }
 
 function showIntro() {
@@ -411,6 +505,19 @@ function showFirstScene() {
   document.getElementById("firstScene").classList.remove("hidden");
 }
 
+function showEnding(path) {
+  hideAll();
+
+  const endings = {
+    follow: "The pink fragment lifts from your palm.<br>It does not fly away.<br>It waits for you to follow.",
+    hide: "You close your hand.<br>The pink light leaks between your fingers.<br>Something on the other side notices.",
+    ask: "You ask what it is.<br>The fragment answers without words.<br>The sky above you begins to remember."
+  };
+
+  document.getElementById("endingText").innerHTML = endings[path];
+  document.getElementById("ending").classList.remove("hidden");
+}
+
 function openTraceModal() {
   document.getElementById("traceModal").classList.add("open");
 }
@@ -419,8 +526,10 @@ function closeTraceModal() {
   document.getElementById("traceModal").classList.remove("open");
 }
 
-function openTraceForm() {
-  window.open(traceFormUrl, "_blank");
+function traceSubmitted() {
+  setTimeout(() => {
+    document.getElementById("traceMessage").textContent = "Your trace has been left behind the pink.";
+  }, 500);
 }
 </script>
 
