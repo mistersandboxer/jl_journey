@@ -40,13 +40,6 @@
 
   .hidden { display: none !important; }
 
-  h1 {
-    letter-spacing: 0.12em;
-    font-size: clamp(2rem, 7vw, 4.8rem);
-    margin: 0 0 24px;
-    font-weight: 700;
-  }
-
   .story-text {
     font-size: clamp(1.15rem, 4vw, 1.55rem);
     font-style: italic;
@@ -68,13 +61,6 @@
   .pink-word {
     color: var(--pink);
     text-shadow: 0 0 14px rgba(255,95,200,.7);
-    position: relative;
-  }
-
-  .intro-button {
-    opacity: 0;
-    animation: revealLine 1.2s ease forwards;
-    animation-delay: 6.2s;
   }
 
   svg {
@@ -83,7 +69,7 @@
     overflow: visible;
   }
 
-  .stem, .seed, .trail, .fluff {
+  .stem, .seed, .trail, .fluff, .shard-line {
     fill: none;
     stroke: currentColor;
     stroke-width: 3;
@@ -100,9 +86,7 @@
     stroke-width: 2.4;
   }
 
-  .ghost {
-    opacity: .18;
-  }
+  .ghost { opacity: .18; }
 
   .core {
     fill: none;
@@ -141,25 +125,6 @@
   .float-seed.f6 { animation-delay: 7.25s; }
   .float-seed.f7 { animation-delay: 8.7s; }
 
-  .pink-seed {
-    width: 38px;
-    margin: 0 auto 26px;
-    color: var(--pink);
-    filter: drop-shadow(0 0 10px rgba(255,95,200,.8));
-    animation: pinkSeedFloat 5s ease-in-out infinite, revealLine 1.2s ease forwards;
-    animation-delay: 5.2s;
-    opacity: 0;
-    position: relative;
-    z-index: 2;
-  }
-
-  .first-scene-seed,
-  .ending-seed {
-    width: 44px;
-    opacity: 1;
-    animation: pinkSeedFloat 5s ease-in-out infinite;
-  }
-
   .mote-field {
     position: absolute;
     inset: 0;
@@ -188,6 +153,31 @@
     font-size: 12px;
   }
 
+  .pink-shard {
+    width: 86px;
+    margin: 0 auto 26px;
+    color: var(--pink);
+    filter: drop-shadow(0 0 14px rgba(255,95,200,.85));
+    position: relative;
+    z-index: 2;
+  }
+
+  .falling-shard {
+    animation: shardFall 2.8s ease-out forwards, shardHover 4s ease-in-out 2.8s infinite;
+  }
+
+  .ending-shard.follow {
+    animation: shardLead 4s ease-in-out infinite;
+  }
+
+  .ending-shard.hide {
+    animation: shardLeak 3s ease-in-out infinite;
+  }
+
+  .ending-shard.ask {
+    animation: shardAnswer 3.8s ease-in-out infinite;
+  }
+
   button {
     margin-top: 30px;
     padding: 14px 26px;
@@ -209,6 +199,37 @@
     color: var(--black);
   }
 
+  .magic-button {
+    position: relative;
+    overflow: visible;
+    opacity: 0;
+    animation: revealLine 1.2s ease forwards;
+    animation-delay: 5.7s;
+  }
+
+  .magic-button::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 1px solid rgba(255,95,200,.65);
+    opacity: 0;
+    transform: scale(.96);
+    animation: buttonRipple 2.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .magic-button::after {
+    content: "✦";
+    position: absolute;
+    right: -18px;
+    top: -16px;
+    color: var(--pink);
+    font-size: .8rem;
+    opacity: .6;
+    animation: moteFloat 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
   .trace-button {
     display: block;
     margin: 22px auto 0;
@@ -224,6 +245,22 @@
     line-height: 1;
     animation: tracePulse 3.5s ease-in-out infinite;
   }
+
+  .reset-drift {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 12;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    font-size: 1rem;
+    opacity: .55;
+  }
+
+  .reset-drift:hover { opacity: 1; }
 
   .modal {
     position: fixed;
@@ -292,16 +329,44 @@
     50% { transform: scale(1.08); opacity: 1; }
   }
 
-  @keyframes pinkSeedFloat {
-    0%, 100% { transform: translate(0,0) rotate(-4deg); }
-    50% { transform: translate(12px,-13px) rotate(8deg); }
+  @keyframes buttonRipple {
+    0%, 100% { opacity: 0; transform: scale(.96); }
+    45% { opacity: .75; transform: scale(1.05); }
+    70% { opacity: .15; transform: scale(1.12); }
   }
 
   @keyframes moteFloat {
     0% { opacity: 0; transform: translateY(24px) scale(.4); }
-    18% { opacity: .65; }
-    55% { opacity: .38; transform: translateY(-54px) scale(1); }
+    18% { opacity: .7; }
+    55% { opacity: .42; transform: translateY(-54px) scale(1); }
     100% { opacity: 0; transform: translateY(-128px) scale(.15); }
+  }
+
+  @keyframes shardFall {
+    0% { opacity: 0; transform: translate(80px,-140px) rotate(25deg) scale(.45); }
+    70% { opacity: 1; transform: translate(0,8px) rotate(-8deg) scale(1); }
+    100% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+  }
+
+  @keyframes shardHover {
+    0%, 100% { transform: translate(0,0) rotate(-3deg); }
+    50% { transform: translate(8px,-10px) rotate(5deg); }
+  }
+
+  @keyframes shardLead {
+    0%, 100% { transform: translate(0,0) rotate(-4deg); }
+    50% { transform: translate(24px,-18px) rotate(8deg); }
+  }
+
+  @keyframes shardLeak {
+    0%, 100% { opacity: .7; transform: scale(.9); filter: drop-shadow(0 0 8px rgba(255,95,200,.7)); }
+    50% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 22px rgba(255,95,200,1)); }
+  }
+
+  @keyframes shardAnswer {
+    0%, 100% { transform: rotate(-5deg) scale(1); }
+    33% { transform: rotate(8deg) scale(1.08); }
+    66% { transform: rotate(-2deg) scale(.96); }
   }
 
   @keyframes sway {
@@ -314,47 +379,13 @@
     50% { transform: scale(1.035); }
   }
 
-  @keyframes attached1 {
-    0%, 5% { opacity: 1; transform: scale(1); }
-    7%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes attached2 {
-    0%, 13% { opacity: 1; transform: scale(1); }
-    15%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes attached3 {
-    0%, 21% { opacity: 1; transform: scale(1); }
-    23%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes attached4 {
-    0%, 29% { opacity: 1; transform: scale(1); }
-    31%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes attached5 {
-    0%, 37% { opacity: 1; transform: scale(1); }
-    39%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes attached6 {
-    0%, 45% { opacity: 1; transform: scale(1); }
-    47%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
-
-  @keyframes attached7 {
-    0%, 53% { opacity: 1; transform: scale(1); }
-    55%, 90% { opacity: 0; transform: scale(.1); }
-    94%, 100% { opacity: 1; transform: scale(1); }
-  }
+  @keyframes attached1 { 0%,5%{opacity:1;transform:scale(1);} 7%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
+  @keyframes attached2 { 0%,13%{opacity:1;transform:scale(1);} 15%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
+  @keyframes attached3 { 0%,21%{opacity:1;transform:scale(1);} 23%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
+  @keyframes attached4 { 0%,29%{opacity:1;transform:scale(1);} 31%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
+  @keyframes attached5 { 0%,37%{opacity:1;transform:scale(1);} 39%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
+  @keyframes attached6 { 0%,45%{opacity:1;transform:scale(1);} 47%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
+  @keyframes attached7 { 0%,53%{opacity:1;transform:scale(1);} 55%,90%{opacity:0;transform:scale(.1);} 94%,100%{opacity:1;transform:scale(1);} }
 
   @keyframes floatDrift {
     0%, 6% { opacity: 0; transform: translate(0,0) rotate(0deg) scale(1); }
@@ -386,15 +417,12 @@
     >
       <input name="entry.788416641" type="text" placeholder="Juno Name" required />
       <input name="entry.1355479768" type="email" placeholder="Email" required />
-
       <button type="submit">LEAVE MY TRACE</button>
     </form>
 
     <button onclick="closeTraceModal()">CLOSE</button>
 
-    <p class="small" id="traceMessage">
-      Your trace stays between you and JULEELAND.
-    </p>
+    <p class="small" id="traceMessage">Your trace stays between you and JULEELAND.</p>
   </div>
 </div>
 
@@ -402,14 +430,12 @@
 
 <main class="wrap">
 
+  <button id="resetButton" class="reset-drift hidden" onclick="resetDrift()" title="Return to the Drift">↺</button>
+
   <section id="landing">
     <div id="dandelionArt"></div>
-
     <button onclick="showIntro()">BEGIN THE DRIFT</button>
-
-    <button class="trace-button" onclick="openTraceModal()" title="Leave a Trace">
-      ✦
-    </button>
+    <button class="trace-button" onclick="openTraceModal()" title="Leave a Trace">✦</button>
   </section>
 
   <section id="intro" class="hidden">
@@ -421,14 +447,12 @@
       <div class="intro-line three">JULEELAND waits behind the <span class="pink-word">pink</span>.</div>
     </div>
 
-    <div class="pink-seed" id="pinkSeedArt"></div>
-
-    <button class="intro-button" onclick="showFirstScene()">CONTINUE</button>
+    <button class="magic-button" onclick="showFirstScene()">STEP THROUGH</button>
   </section>
 
   <section id="firstScene" class="hidden">
     <div class="mote-field" id="sceneMotes"></div>
-    <div class="pink-seed first-scene-seed" id="pinkSeedArtTwo"></div>
+    <div class="pink-shard falling-shard" id="pinkShardArt"></div>
 
     <div class="story-text">
       A piece of the pink sky falls into your hand.<br>
@@ -443,7 +467,7 @@
 
   <section id="ending" class="hidden">
     <div class="mote-field" id="endingMotes"></div>
-    <div id="endingArt" class="pink-seed ending-seed"></div>
+    <div id="endingArt" class="pink-shard"></div>
     <div class="story-text" id="endingText"></div>
     <button onclick="openTraceModal()">LEAVE A TRACE</button>
   </section>
@@ -454,14 +478,12 @@
 const floatingSeed = (x, y) => `
   <g>
     <path class="trail" d="M${x} ${y} C${x - 12} ${y - 40}, ${x + 18} ${y - 78}, ${x + 48} ${y - 118}" />
-
     <g class="ghost">
       <line class="fluff" x1="${x}" y1="${y - 8}" x2="${x}" y2="${y - 24}" />
       <line class="fluff" x1="${x}" y1="${y - 8}" x2="${x - 12}" y2="${y - 20}" />
       <line class="fluff" x1="${x}" y1="${y - 8}" x2="${x + 12}" y2="${y - 20}" />
       <circle class="seed" cx="${x}" cy="${y}" r="5" />
     </g>
-
     <line class="fluff" x1="${x}" y1="${y - 5}" x2="${x}" y2="${y - 22}" />
     <line class="fluff" x1="${x}" y1="${y - 5}" x2="${x - 13}" y2="${y - 17}" />
     <line class="fluff" x1="${x}" y1="${y - 5}" x2="${x + 13}" y2="${y - 17}" />
@@ -469,13 +491,11 @@ const floatingSeed = (x, y) => `
   </g>
 `;
 
-const pinkSeedSVG = `
-<svg viewBox="0 0 80 100" aria-label="floating pink sky fragment">
-  <path class="fluff" d="M40 38 L40 8" />
-  <path class="fluff" d="M40 38 L22 16" />
-  <path class="fluff" d="M40 38 L58 16" />
-  <circle class="seed" cx="40" cy="48" r="9" />
-  <path class="trail" d="M38 58 C25 73, 40 83, 30 96" />
+const shardSVG = `
+<svg viewBox="0 0 90 110" aria-label="pink sky shard">
+  <path class="shard-line" d="M45 12 L58 47 L82 57 L58 67 L45 100 L32 67 L8 57 L32 47 Z" />
+  <path class="trail" d="M45 8 C38 0, 33 -8, 30 -18" />
+  <circle class="seed" cx="45" cy="57" r="4" />
 </svg>
 `;
 
@@ -486,44 +506,15 @@ const dandelionSVG = `
     <path class="stem" d="M248 430 C205 390, 182 350, 158 310" />
     <path class="stem" d="M252 410 C300 375, 330 335, 358 295" />
 
-    <g class="core-group">
-      <circle class="core" cx="260" cy="205" r="18" />
-    </g>
+    <g class="core-group"><circle class="core" cx="260" cy="205" r="18" /></g>
 
-    <g class="attached-seed a1" style="transform-origin:260px 118px;">
-      <line class="seed" x1="260" y1="205" x2="260" y2="120" />
-      <circle class="seed" cx="260" cy="118" r="7" />
-    </g>
-
-    <g class="attached-seed a2" style="transform-origin:208px 138px;">
-      <line class="seed" x1="260" y1="205" x2="210" y2="140" />
-      <circle class="seed" cx="208" cy="138" r="7" />
-    </g>
-
-    <g class="attached-seed a3" style="transform-origin:312px 138px;">
-      <line class="seed" x1="260" y1="205" x2="310" y2="140" />
-      <circle class="seed" cx="312" cy="138" r="7" />
-    </g>
-
-    <g class="attached-seed a4" style="transform-origin:178px 205px;">
-      <line class="seed" x1="260" y1="205" x2="180" y2="205" />
-      <circle class="seed" cx="178" cy="205" r="7" />
-    </g>
-
-    <g class="attached-seed a5" style="transform-origin:342px 205px;">
-      <line class="seed" x1="260" y1="205" x2="340" y2="205" />
-      <circle class="seed" cx="342" cy="205" r="7" />
-    </g>
-
-    <g class="attached-seed a6" style="transform-origin:203px 262px;">
-      <line class="seed" x1="260" y1="205" x2="205" y2="260" />
-      <circle class="seed" cx="203" cy="262" r="7" />
-    </g>
-
-    <g class="attached-seed a7" style="transform-origin:317px 262px;">
-      <line class="seed" x1="260" y1="205" x2="315" y2="260" />
-      <circle class="seed" cx="317" cy="262" r="7" />
-    </g>
+    <g class="attached-seed a1" style="transform-origin:260px 118px;"><line class="seed" x1="260" y1="205" x2="260" y2="120" /><circle class="seed" cx="260" cy="118" r="7" /></g>
+    <g class="attached-seed a2" style="transform-origin:208px 138px;"><line class="seed" x1="260" y1="205" x2="210" y2="140" /><circle class="seed" cx="208" cy="138" r="7" /></g>
+    <g class="attached-seed a3" style="transform-origin:312px 138px;"><line class="seed" x1="260" y1="205" x2="310" y2="140" /><circle class="seed" cx="312" cy="138" r="7" /></g>
+    <g class="attached-seed a4" style="transform-origin:178px 205px;"><line class="seed" x1="260" y1="205" x2="180" y2="205" /><circle class="seed" cx="178" cy="205" r="7" /></g>
+    <g class="attached-seed a5" style="transform-origin:342px 205px;"><line class="seed" x1="260" y1="205" x2="340" y2="205" /><circle class="seed" cx="342" cy="205" r="7" /></g>
+    <g class="attached-seed a6" style="transform-origin:203px 262px;"><line class="seed" x1="260" y1="205" x2="205" y2="260" /><circle class="seed" cx="203" cy="262" r="7" /></g>
+    <g class="attached-seed a7" style="transform-origin:317px 262px;"><line class="seed" x1="260" y1="205" x2="315" y2="260" /><circle class="seed" cx="317" cy="262" r="7" /></g>
   </g>
 
   <g class="float-seed f1">${floatingSeed(260,118)}</g>
@@ -537,14 +528,12 @@ const dandelionSVG = `
 `;
 
 document.getElementById("dandelionArt").innerHTML = dandelionSVG;
-document.getElementById("pinkSeedArt").innerHTML = pinkSeedSVG;
-document.getElementById("pinkSeedArtTwo").innerHTML = pinkSeedSVG;
-document.getElementById("endingArt").innerHTML = pinkSeedSVG;
+document.getElementById("pinkShardArt").innerHTML = shardSVG;
+document.getElementById("endingArt").innerHTML = shardSVG;
 
 function createMotes(containerId, count = 16) {
   const container = document.getElementById(containerId);
   if (!container) return;
-
   container.innerHTML = "";
 
   for (let i = 0; i < count; i++) {
@@ -552,16 +541,16 @@ function createMotes(containerId, count = 16) {
     mote.className = i % 5 === 0 ? "wish-mote star" : "wish-mote";
     mote.textContent = i % 5 === 0 ? "✦" : "";
     mote.style.left = `${8 + Math.random() * 84}%`;
-    mote.style.top = `${18 + Math.random() * 70}%`;
+    mote.style.top = `${14 + Math.random() * 76}%`;
     mote.style.animationDelay = `${Math.random() * 5}s`;
-    mote.style.animationDuration = `${6 + Math.random() * 6}s`;
+    mote.style.animationDuration = `${6 + Math.random() * 7}s`;
     container.appendChild(mote);
   }
 }
 
-createMotes("introMotes", 18);
-createMotes("sceneMotes", 12);
-createMotes("endingMotes", 12);
+createMotes("introMotes", 34);
+createMotes("sceneMotes", 18);
+createMotes("endingMotes", 18);
 
 function hideAll() {
   document.getElementById("landing").classList.add("hidden");
@@ -570,17 +559,36 @@ function hideAll() {
   document.getElementById("ending").classList.add("hidden");
 }
 
+function showResetButton() {
+  document.getElementById("resetButton").classList.remove("hidden");
+}
+
+function hideResetButton() {
+  document.getElementById("resetButton").classList.add("hidden");
+}
+
+function resetDrift() {
+  hideAll();
+  document.body.classList.remove("night");
+  document.getElementById("dandelionArt").innerHTML = dandelionSVG;
+  hideResetButton();
+  document.getElementById("landing").classList.remove("hidden");
+}
+
 function showIntro() {
   document.getElementById("dandelionArt").innerHTML = "";
   hideAll();
   document.body.classList.add("night");
-  createMotes("introMotes", 18);
+  createMotes("introMotes", 34);
+  showResetButton();
   document.getElementById("intro").classList.remove("hidden");
 }
 
 function showFirstScene() {
   hideAll();
-  createMotes("sceneMotes", 12);
+  createMotes("sceneMotes", 18);
+  document.getElementById("pinkShardArt").innerHTML = shardSVG;
+  showResetButton();
   document.getElementById("firstScene").classList.remove("hidden");
 }
 
@@ -588,13 +596,25 @@ function showEnding(path) {
   hideAll();
 
   const endings = {
-    follow: "The pink fragment lifts from your palm.<br>It does not fly away.<br>It waits for you to follow.",
-    hide: "You close your hand.<br>The pink light leaks between your fingers.<br>Something on the other side notices.",
-    ask: "You ask what it is.<br>The fragment answers without words.<br>The sky above you begins to remember."
+    follow: {
+      text: "The pink shard lifts from your palm.<br>It does not fly away.<br>It waits for you to follow.",
+      className: "pink-shard ending-shard follow"
+    },
+    hide: {
+      text: "You close your hand.<br>The pink light leaks between your fingers.<br>Something on the other side notices.",
+      className: "pink-shard ending-shard hide"
+    },
+    ask: {
+      text: "You ask what it is.<br>The shard answers without words.<br>The sky above you begins to remember.",
+      className: "pink-shard ending-shard ask"
+    }
   };
 
-  document.getElementById("endingText").innerHTML = endings[path];
-  createMotes("endingMotes", 12);
+  document.getElementById("endingText").innerHTML = endings[path].text;
+  document.getElementById("endingArt").className = endings[path].className;
+  document.getElementById("endingArt").innerHTML = shardSVG;
+  createMotes("endingMotes", 22);
+  showResetButton();
   document.getElementById("ending").classList.remove("hidden");
 }
 
