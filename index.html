@@ -24,6 +24,7 @@
     justify-content: center;
     text-align: center;
     transition: background .8s ease, color .8s ease;
+    overflow-x: hidden;
   }
 
   body.night {
@@ -34,6 +35,7 @@
   .wrap {
     width: min(92vw, 720px);
     padding: 24px;
+    position: relative;
   }
 
   .hidden { display: none !important; }
@@ -50,6 +52,8 @@
     font-style: italic;
     line-height: 1.5;
     margin-bottom: 34px;
+    position: relative;
+    z-index: 2;
   }
 
   .intro-line {
@@ -58,18 +62,19 @@
   }
 
   .intro-line.one { animation-delay: .4s; }
-  .intro-line.two { animation-delay: 1.7s; }
-  .intro-line.three { animation-delay: 3s; }
+  .intro-line.two { animation-delay: 1.8s; }
+  .intro-line.three { animation-delay: 3.2s; }
 
   .pink-word {
     color: var(--pink);
-    text-shadow: 0 0 14px rgba(255,95,200,.6);
+    text-shadow: 0 0 14px rgba(255,95,200,.7);
+    position: relative;
   }
 
   .intro-button {
     opacity: 0;
     animation: revealLine 1.2s ease forwards;
-    animation-delay: 4.6s;
+    animation-delay: 6.2s;
   }
 
   svg {
@@ -105,7 +110,7 @@
     stroke-width: 3;
   }
 
-  .stem-sway {
+  .dandelion-whole {
     animation: sway 5s ease-in-out infinite;
     transform-origin: 250px 515px;
   }
@@ -137,11 +142,50 @@
   .float-seed.f7 { animation-delay: 8.7s; }
 
   .pink-seed {
-    width: 80px;
+    width: 38px;
     margin: 0 auto 26px;
     color: var(--pink);
-    filter: drop-shadow(0 0 12px rgba(255,95,200,.75));
+    filter: drop-shadow(0 0 10px rgba(255,95,200,.8));
+    animation: pinkSeedFloat 5s ease-in-out infinite, revealLine 1.2s ease forwards;
+    animation-delay: 5.2s;
+    opacity: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .first-scene-seed,
+  .ending-seed {
+    width: 44px;
+    opacity: 1;
     animation: pinkSeedFloat 5s ease-in-out infinite;
+  }
+
+  .mote-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 1;
+  }
+
+  .wish-mote {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--pink);
+    box-shadow: 0 0 12px rgba(255,95,200,.9);
+    opacity: 0;
+    animation: moteFloat 8s ease-in-out infinite;
+  }
+
+  .wish-mote.star {
+    width: 7px;
+    height: 7px;
+    background: transparent;
+    color: var(--pink);
+    box-shadow: none;
+    font-size: 12px;
   }
 
   button {
@@ -249,13 +293,20 @@
   }
 
   @keyframes pinkSeedFloat {
-    0%, 100% { transform: translate(0,0) rotate(-4deg); opacity: .82; }
-    50% { transform: translate(18px,-18px) rotate(8deg); opacity: 1; }
+    0%, 100% { transform: translate(0,0) rotate(-4deg); }
+    50% { transform: translate(12px,-13px) rotate(8deg); }
+  }
+
+  @keyframes moteFloat {
+    0% { opacity: 0; transform: translateY(24px) scale(.4); }
+    18% { opacity: .65; }
+    55% { opacity: .38; transform: translateY(-54px) scale(1); }
+    100% { opacity: 0; transform: translateY(-128px) scale(.15); }
   }
 
   @keyframes sway {
-    0%, 100% { transform: rotate(-.85deg); }
-    50% { transform: rotate(.85deg); }
+    0%, 100% { transform: rotate(-1.7deg); }
+    50% { transform: rotate(1.7deg); }
   }
 
   @keyframes pulseCore {
@@ -362,7 +413,7 @@
   </section>
 
   <section id="intro" class="hidden">
-    <div class="pink-seed" id="pinkSeedArt"></div>
+    <div class="mote-field" id="introMotes"></div>
 
     <div class="story-text">
       <div class="intro-line one">Some doors open.</div>
@@ -370,11 +421,14 @@
       <div class="intro-line three">JULEELAND waits behind the <span class="pink-word">pink</span>.</div>
     </div>
 
+    <div class="pink-seed" id="pinkSeedArt"></div>
+
     <button class="intro-button" onclick="showFirstScene()">CONTINUE</button>
   </section>
 
   <section id="firstScene" class="hidden">
-    <div class="pink-seed" id="pinkSeedArtTwo"></div>
+    <div class="mote-field" id="sceneMotes"></div>
+    <div class="pink-seed first-scene-seed" id="pinkSeedArtTwo"></div>
 
     <div class="story-text">
       A piece of the pink sky falls into your hand.<br>
@@ -388,7 +442,8 @@
   </section>
 
   <section id="ending" class="hidden">
-    <div id="endingArt" class="pink-seed"></div>
+    <div class="mote-field" id="endingMotes"></div>
+    <div id="endingArt" class="pink-seed ending-seed"></div>
     <div class="story-text" id="endingText"></div>
     <button onclick="openTraceModal()">LEAVE A TRACE</button>
   </section>
@@ -426,10 +481,14 @@ const pinkSeedSVG = `
 
 const dandelionSVG = `
 <svg viewBox="0 0 520 620" aria-label="Animated black line dandelion">
-  <g class="stem-sway">
+  <g class="dandelion-whole">
     <path class="stem" d="M250 515 C240 420, 245 315, 260 220" />
     <path class="stem" d="M248 430 C205 390, 182 350, 158 310" />
     <path class="stem" d="M252 410 C300 375, 330 335, 358 295" />
+
+    <g class="core-group">
+      <circle class="core" cx="260" cy="205" r="18" />
+    </g>
 
     <g class="attached-seed a1" style="transform-origin:260px 118px;">
       <line class="seed" x1="260" y1="205" x2="260" y2="120" />
@@ -467,10 +526,6 @@ const dandelionSVG = `
     </g>
   </g>
 
-  <g class="core-group">
-    <circle class="core" cx="260" cy="205" r="18" />
-  </g>
-
   <g class="float-seed f1">${floatingSeed(260,118)}</g>
   <g class="float-seed f2">${floatingSeed(208,138)}</g>
   <g class="float-seed f3">${floatingSeed(312,138)}</g>
@@ -486,6 +541,28 @@ document.getElementById("pinkSeedArt").innerHTML = pinkSeedSVG;
 document.getElementById("pinkSeedArtTwo").innerHTML = pinkSeedSVG;
 document.getElementById("endingArt").innerHTML = pinkSeedSVG;
 
+function createMotes(containerId, count = 16) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    const mote = document.createElement("span");
+    mote.className = i % 5 === 0 ? "wish-mote star" : "wish-mote";
+    mote.textContent = i % 5 === 0 ? "✦" : "";
+    mote.style.left = `${8 + Math.random() * 84}%`;
+    mote.style.top = `${18 + Math.random() * 70}%`;
+    mote.style.animationDelay = `${Math.random() * 5}s`;
+    mote.style.animationDuration = `${6 + Math.random() * 6}s`;
+    container.appendChild(mote);
+  }
+}
+
+createMotes("introMotes", 18);
+createMotes("sceneMotes", 12);
+createMotes("endingMotes", 12);
+
 function hideAll() {
   document.getElementById("landing").classList.add("hidden");
   document.getElementById("intro").classList.add("hidden");
@@ -497,11 +574,13 @@ function showIntro() {
   document.getElementById("dandelionArt").innerHTML = "";
   hideAll();
   document.body.classList.add("night");
+  createMotes("introMotes", 18);
   document.getElementById("intro").classList.remove("hidden");
 }
 
 function showFirstScene() {
   hideAll();
+  createMotes("sceneMotes", 12);
   document.getElementById("firstScene").classList.remove("hidden");
 }
 
@@ -515,6 +594,7 @@ function showEnding(path) {
   };
 
   document.getElementById("endingText").innerHTML = endings[path];
+  createMotes("endingMotes", 12);
   document.getElementById("ending").classList.remove("hidden");
 }
 
