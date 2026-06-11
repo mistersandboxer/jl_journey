@@ -6,18 +6,28 @@
 <title>JULEELAND</title>
 
 <style>
-  :root { --cycle: 17s; }
+  :root {
+    --cream: #fbfaf4;
+    --black: #080808;
+    --cycle: 18s;
+  }
 
   body {
     margin: 0;
     min-height: 100vh;
-    background: #fbfaf4;
+    background: var(--cream);
     color: #111;
     font-family: Georgia, serif;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    transition: background .8s ease, color .8s ease;
+  }
+
+  body.night {
+    background: var(--black);
+    color: var(--cream);
   }
 
   .wrap {
@@ -25,7 +35,7 @@
     padding: 24px;
   }
 
-  .hidden { display: none; }
+  .hidden { display: none !important; }
 
   h1 {
     letter-spacing: 0.12em;
@@ -47,52 +57,65 @@
     overflow: visible;
   }
 
-  .stem, .seed {
+  .stem, .seed, .trail {
     fill: none;
-    stroke: #111;
+    stroke: currentColor;
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
 
+  .trail {
+    opacity: .22;
+    stroke-width: 2;
+  }
+
   .core {
     fill: none;
-    stroke: #111;
+    stroke: currentColor;
     stroke-width: 3;
   }
 
   .dandelion {
-    animation: sway 4.8s ease-in-out infinite;
-    transform-origin: 250px 455px;
+    animation: sway 5s ease-in-out infinite;
+    transform-origin: 250px 515px;
   }
 
   .core-group {
-    animation: tremble 2.6s ease-in-out infinite;
+    animation: tremble 2.8s ease-in-out infinite;
   }
 
   .attached-seed {
-    animation: attachedSeed var(--cycle) ease-in-out infinite;
+    animation: attachedStay var(--cycle) linear infinite;
   }
+
+  .attached-seed.a1 { animation-name: attached1; }
+  .attached-seed.a2 { animation-name: attached2; }
+  .attached-seed.a3 { animation-name: attached3; }
+  .attached-seed.a4 { animation-name: attached4; }
+  .attached-seed.a5 { animation-name: attached5; }
+  .attached-seed.a6 { animation-name: attached6; }
+  .attached-seed.a7 { animation-name: attached7; }
 
   .float-seed {
     opacity: 0;
-    animation: floatAway var(--cycle) cubic-bezier(.42, 0, .25, 1) infinite;
+    animation: floatDrift var(--cycle) ease-in-out infinite;
   }
 
-  .float-seed.seed-1 { animation-delay: 0s; }
-  .float-seed.seed-2 { animation-delay: 1.25s; }
-  .float-seed.seed-3 { animation-delay: 2.5s; }
-  .float-seed.seed-4 { animation-delay: 3.75s; }
-  .float-seed.seed-5 { animation-delay: 5s; }
-  .float-seed.seed-6 { animation-delay: 6.25s; }
-  .float-seed.seed-7 { animation-delay: 7.5s; }
+  .float-seed.f1 { animation-delay: 0s; }
+  .float-seed.f2 { animation-delay: 1.45s; }
+  .float-seed.f3 { animation-delay: 2.9s; }
+  .float-seed.f4 { animation-delay: 4.35s; }
+  .float-seed.f5 { animation-delay: 5.8s; }
+  .float-seed.f6 { animation-delay: 7.25s; }
+  .float-seed.f7 { animation-delay: 8.7s; }
 
   button {
     margin-top: 30px;
     padding: 14px 26px;
-    border: 2px solid #111;
+    border: 2px solid currentColor;
     background: transparent;
-    color: #111;
+    color: currentColor;
     font-size: 1rem;
     letter-spacing: .12em;
     cursor: pointer;
@@ -100,8 +123,12 @@
   }
 
   button:hover {
-    background: #111;
-    color: #fbfaf4;
+    background: currentColor;
+    color: var(--cream);
+  }
+
+  body.night button:hover {
+    color: var(--black);
   }
 
   .seed-registry {
@@ -109,130 +136,170 @@
     margin: 22px auto 0;
     width: 42px;
     height: 42px;
-    border: 2px solid #111;
+    border: 2px solid currentColor;
     border-radius: 50%;
-    background: #fbfaf4;
-    color: #111;
+    background: transparent;
+    color: currentColor;
     cursor: pointer;
     font-size: 22px;
     padding: 0;
     line-height: 1;
   }
 
-  .seed-registry:hover {
-    background: #111;
-    color: #fbfaf4;
-  }
-
   .modal {
     position: fixed;
     inset: 0;
-    background: rgba(251,250,244,.94);
+    background: rgba(251,250,244,.96);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 20;
-    padding: 24px;
+    padding: 16px;
+    color: #111;
   }
 
   .modal.open { display: flex; }
 
   .modal-box {
-    max-width: 420px;
+    width: min(88vw, 340px);
     border: 2px solid #111;
-    padding: 28px;
-    background: #fbfaf4;
+    padding: 20px;
+    background: var(--cream);
   }
 
   .modal-box h2 {
-    letter-spacing: .1em;
-    margin-top: 0;
+    letter-spacing: .08em;
+    margin: 0 0 10px;
+    font-size: 1.1rem;
+  }
+
+  .modal-box p {
+    margin: 8px 0 14px;
+    font-size: .95rem;
+    line-height: 1.35;
   }
 
   .modal-box input,
   .modal-box select {
     width: 100%;
-    margin: 8px 0;
-    padding: 12px;
+    margin: 6px 0;
+    padding: 10px;
     border: 1px solid #111;
     background: #fff;
     font-family: Georgia, serif;
-    font-size: 1rem;
+    font-size: .95rem;
     box-sizing: border-box;
   }
 
+  .modal-box button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 11px 14px;
+    font-size: .85rem;
+  }
+
   .small {
-    font-size: .82rem;
-    line-height: 1.4;
-    margin-top: 12px;
+    font-size: .72rem !important;
+    line-height: 1.35 !important;
+    margin-top: 12px !important;
   }
 
   @keyframes sway {
-    0%, 100% { transform: rotate(-2deg); }
-    50% { transform: rotate(2deg); }
+    0%, 100% { transform: rotate(-1.8deg); }
+    50% { transform: rotate(1.8deg); }
   }
 
   @keyframes tremble {
     0%, 100% { transform: translate(0,0); }
-    50% { transform: translate(1.5px,-1.5px); }
+    50% { transform: translate(1px,-1px); }
   }
 
-  @keyframes attachedSeed {
-    0%, 7% {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    10%, 86% {
-      opacity: 0;
-      transform: scale(.12);
-    }
-
-    92%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
+  @keyframes attached1 {
+    0%, 5% { opacity: 1; transform: scale(1); }
+    7%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
   }
 
-  @keyframes floatAway {
-    0%, 7% {
+  @keyframes attached2 {
+    0%, 13% { opacity: 1; transform: scale(1); }
+    15%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes attached3 {
+    0%, 21% { opacity: 1; transform: scale(1); }
+    23%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes attached4 {
+    0%, 29% { opacity: 1; transform: scale(1); }
+    31%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes attached5 {
+    0%, 37% { opacity: 1; transform: scale(1); }
+    39%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes attached6 {
+    0%, 45% { opacity: 1; transform: scale(1); }
+    47%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes attached7 {
+    0%, 53% { opacity: 1; transform: scale(1); }
+    55%, 90% { opacity: 0; transform: scale(.1); }
+    94%, 100% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes floatDrift {
+    0%, 6% {
       opacity: 0;
       transform: translate(0,0) rotate(0deg) scale(1);
     }
 
-    10% {
+    8% {
       opacity: 1;
-      transform: translate(6px,-10px) rotate(5deg) scale(1);
+      transform: translate(4px,-8px) rotate(4deg) scale(1);
     }
 
-    22% {
-      opacity: .92;
-      transform: translate(28px,-48px) rotate(-18deg) scale(.95);
+    18% {
+      opacity: .95;
+      transform: translate(-10px,-38px) rotate(-10deg) scale(.98);
     }
 
-    36% {
-      opacity: .82;
-      transform: translate(12px,-92px) rotate(12deg) scale(.88);
+    29% {
+      opacity: .9;
+      transform: translate(18px,-76px) rotate(13deg) scale(.92);
     }
 
-    50% {
-      opacity: .62;
-      transform: translate(62px,-138px) rotate(-28deg) scale(.76);
+    41% {
+      opacity: .72;
+      transform: translate(-6px,-118px) rotate(-18deg) scale(.82);
     }
 
-    64% {
-      opacity: .42;
-      transform: translate(38px,-188px) rotate(22deg) scale(.58);
+    55% {
+      opacity: .52;
+      transform: translate(34px,-166px) rotate(24deg) scale(.66);
     }
 
-    78% {
-      opacity: .16;
-      transform: translate(96px,-250px) rotate(-8deg) scale(.38);
+    70% {
+      opacity: .25;
+      transform: translate(4px,-226px) rotate(-12deg) scale(.46);
     }
 
-    88%, 100% {
+    84% {
+      opacity: .08;
+      transform: translate(48px,-292px) rotate(32deg) scale(.28);
+    }
+
+    92%, 100% {
       opacity: 0;
-      transform: translate(145px,-330px) rotate(36deg) scale(.15);
+      transform: translate(68px,-350px) rotate(48deg) scale(.12);
     }
   }
 </style>
@@ -243,13 +310,13 @@
 <div class="modal" id="seedModal">
   <div class="modal-box">
     <h2>THE SEED REGISTRY</h2>
-    <p>The road remembers some travelers. Most are forgotten.</p>
+    <p>What shall JULEELAND call you?</p>
 
-    <input type="text" placeholder="What name shall JULEELAND know you by?" />
-    <input type="email" placeholder="Email address" />
+    <input type="text" placeholder="Juno Name" />
+    <input type="email" placeholder="Email" />
 
     <select>
-      <option>Choose your Seedlight</option>
+      <option>Seedlight</option>
       <option>Wonder</option>
       <option>Memory</option>
       <option>Dreams</option>
@@ -261,7 +328,7 @@
     <button onclick="closeSeedRegistry()">CLOSE</button>
 
     <p class="small">
-      Placeholder only. Later this will connect to your Google Form or mailing list.
+      Placeholder only. Later this connects to your Google Form or mailing list.
     </p>
   </div>
 </div>
@@ -281,17 +348,17 @@
   <section id="intro" class="hidden">
     <h1>JULEELAND</h1>
     <div class="story-text">
-      Some roads are walked.<br>
-      Some are remembered.<br>
-      JULEELAND is neither.
+      Some doors open.<br>
+      Some skies split.<br>
+      JULEELAND waits behind the pink.
     </div>
     <button onclick="showFirstScene()">CONTINUE</button>
   </section>
 
   <section id="firstScene" class="hidden">
     <div class="story-text">
-      A drifting seed lands in your hand.<br>
-      It feels strangely familiar.
+      A seed lands in your hand.<br>
+      Somewhere above you, the sky turns pink.
     </div>
     <button onclick="alert('Soon: Follow the seed.')">FOLLOW THE SEED</button>
     <button onclick="alert('Soon: Let it go.')">LET IT GO</button>
@@ -312,75 +379,75 @@ const dandelionSVG = `
       <circle class="core" cx="260" cy="205" r="18" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:260px 118px;">
+    <g class="attached-seed a1" style="transform-origin:260px 118px;">
       <line class="seed" x1="260" y1="205" x2="260" y2="120" />
       <circle class="seed" cx="260" cy="118" r="7" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:208px 138px;">
+    <g class="attached-seed a2" style="transform-origin:208px 138px;">
       <line class="seed" x1="260" y1="205" x2="210" y2="140" />
       <circle class="seed" cx="208" cy="138" r="7" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:312px 138px;">
+    <g class="attached-seed a3" style="transform-origin:312px 138px;">
       <line class="seed" x1="260" y1="205" x2="310" y2="140" />
       <circle class="seed" cx="312" cy="138" r="7" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:178px 205px;">
+    <g class="attached-seed a4" style="transform-origin:178px 205px;">
       <line class="seed" x1="260" y1="205" x2="180" y2="205" />
       <circle class="seed" cx="178" cy="205" r="7" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:342px 205px;">
+    <g class="attached-seed a5" style="transform-origin:342px 205px;">
       <line class="seed" x1="260" y1="205" x2="340" y2="205" />
       <circle class="seed" cx="342" cy="205" r="7" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:203px 262px;">
+    <g class="attached-seed a6" style="transform-origin:203px 262px;">
       <line class="seed" x1="260" y1="205" x2="205" y2="260" />
       <circle class="seed" cx="203" cy="262" r="7" />
     </g>
 
-    <g class="attached-seed" style="transform-origin:317px 262px;">
+    <g class="attached-seed a7" style="transform-origin:317px 262px;">
       <line class="seed" x1="260" y1="205" x2="315" y2="260" />
       <circle class="seed" cx="317" cy="262" r="7" />
     </g>
   </g>
 
-  <g class="float-seed seed-1">
-    <path class="seed" d="M260 120 C278 70, 318 35, 370 10" />
-    <circle class="seed" cx="374" cy="7" r="6" />
+  <g class="float-seed f1">
+    <path class="trail" d="M260 120 C255 84, 276 46, 310 12" />
+    <circle class="seed" cx="260" cy="118" r="6" />
   </g>
 
-  <g class="float-seed seed-2">
-    <path class="seed" d="M208 138 C230 90, 265 50, 310 20" />
-    <circle class="seed" cx="315" cy="17" r="6" />
+  <g class="float-seed f2">
+    <path class="trail" d="M208 138 C185 92, 210 50, 248 16" />
+    <circle class="seed" cx="208" cy="138" r="6" />
   </g>
 
-  <g class="float-seed seed-3">
-    <path class="seed" d="M312 138 C350 100, 392 60, 440 30" />
-    <circle class="seed" cx="445" cy="27" r="6" />
+  <g class="float-seed f3">
+    <path class="trail" d="M312 138 C355 96, 390 54, 430 18" />
+    <circle class="seed" cx="312" cy="138" r="6" />
   </g>
 
-  <g class="float-seed seed-4">
-    <path class="seed" d="M178 205 C205 155, 245 110, 285 70" />
-    <circle class="seed" cx="290" cy="66" r="6" />
+  <g class="float-seed f4">
+    <path class="trail" d="M178 205 C150 160, 176 102, 220 55" />
+    <circle class="seed" cx="178" cy="205" r="6" />
   </g>
 
-  <g class="float-seed seed-5">
-    <path class="seed" d="M342 205 C390 170, 430 125, 465 78" />
-    <circle class="seed" cx="469" cy="73" r="6" />
+  <g class="float-seed f5">
+    <path class="trail" d="M342 205 C388 170, 426 115, 462 62" />
+    <circle class="seed" cx="342" cy="205" r="6" />
   </g>
 
-  <g class="float-seed seed-6">
-    <path class="seed" d="M203 262 C230 210, 270 160, 320 115" />
-    <circle class="seed" cx="325" cy="111" r="6" />
+  <g class="float-seed f6">
+    <path class="trail" d="M203 262 C172 212, 205 145, 260 94" />
+    <circle class="seed" cx="203" cy="262" r="6" />
   </g>
 
-  <g class="float-seed seed-7">
-    <path class="seed" d="M317 262 C365 225, 410 175, 455 125" />
-    <circle class="seed" cx="459" cy="120" r="6" />
+  <g class="float-seed f7">
+    <path class="trail" d="M317 262 C362 218, 412 158, 458 102" />
+    <circle class="seed" cx="317" cy="262" r="6" />
   </g>
 </svg>
 `;
@@ -394,7 +461,9 @@ function hideAll() {
 }
 
 function showIntro() {
+  document.getElementById("dandelionArt").innerHTML = "";
   hideAll();
+  document.body.classList.add("night");
   document.getElementById("intro").classList.remove("hidden");
 }
 
