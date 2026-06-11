@@ -135,7 +135,7 @@
     color: var(--black);
   }
 
-  .seed-registry {
+  .trace-button {
     display: block;
     margin: 22px auto 0;
     width: 42px;
@@ -181,18 +181,6 @@
     margin: 8px 0 14px;
     font-size: .95rem;
     line-height: 1.35;
-  }
-
-  .modal-box input,
-  .modal-box select {
-    width: 100%;
-    margin: 6px 0;
-    padding: 10px;
-    border: 1px solid #111;
-    background: #fff;
-    font-family: Georgia, serif;
-    font-size: .95rem;
-    box-sizing: border-box;
   }
 
   .modal-box button {
@@ -261,78 +249,32 @@
   }
 
   @keyframes floatDrift {
-    0%, 6% {
-      opacity: 0;
-      transform: translate(0,0) rotate(0deg) scale(1);
-    }
-
-    8% {
-      opacity: 1;
-      transform: translate(4px,-8px) rotate(4deg) scale(1);
-    }
-
-    18% {
-      opacity: .95;
-      transform: translate(-10px,-38px) rotate(-10deg) scale(.98);
-    }
-
-    29% {
-      opacity: .9;
-      transform: translate(18px,-76px) rotate(13deg) scale(.92);
-    }
-
-    41% {
-      opacity: .72;
-      transform: translate(-6px,-118px) rotate(-18deg) scale(.82);
-    }
-
-    55% {
-      opacity: .52;
-      transform: translate(34px,-166px) rotate(24deg) scale(.66);
-    }
-
-    70% {
-      opacity: .25;
-      transform: translate(4px,-226px) rotate(-12deg) scale(.46);
-    }
-
-    84% {
-      opacity: .08;
-      transform: translate(48px,-292px) rotate(32deg) scale(.28);
-    }
-
-    92%, 100% {
-      opacity: 0;
-      transform: translate(68px,-350px) rotate(48deg) scale(.12);
-    }
+    0%, 6% { opacity: 0; transform: translate(0,0) rotate(0deg) scale(1); }
+    8% { opacity: 1; transform: translate(4px,-8px) rotate(4deg) scale(1); }
+    18% { opacity: .95; transform: translate(-10px,-38px) rotate(-10deg) scale(.98); }
+    29% { opacity: .9; transform: translate(18px,-76px) rotate(13deg) scale(.92); }
+    41% { opacity: .72; transform: translate(-6px,-118px) rotate(-18deg) scale(.82); }
+    55% { opacity: .52; transform: translate(34px,-166px) rotate(24deg) scale(.66); }
+    70% { opacity: .25; transform: translate(4px,-226px) rotate(-12deg) scale(.46); }
+    84% { opacity: .08; transform: translate(48px,-292px) rotate(32deg) scale(.28); }
+    92%, 100% { opacity: 0; transform: translate(68px,-350px) rotate(48deg) scale(.12); }
   }
 </style>
 </head>
 
 <body>
 
-<div class="modal" id="seedModal">
+<div class="modal" id="traceModal">
   <div class="modal-box">
-    <h2>THE SEED REGISTRY</h2>
-    <p>What shall JULEELAND call you?</p>
+    <h2>LEAVE A TRACE</h2>
+    <p>Some travelers pass through quietly. Others leave something behind.</p>
+    <p>Tell JULEELAND what to call you, and how the Wish Keepers may find you again.</p>
 
-    <input type="text" placeholder="Juno Name" />
-    <input type="email" placeholder="Email" />
-
-    <select>
-      <option>Seedlight</option>
-      <option>Wonder</option>
-      <option>Memory</option>
-      <option>Dreams</option>
-      <option>Courage</option>
-      <option>Mischief</option>
-    </select>
-
-    <button onclick="fakeSignup()">PLANT MY SEED</button>
-    <button onclick="closeSeedRegistry()">CLOSE</button>
+    <button onclick="openTraceForm()">LEAVE MY TRACE</button>
+    <button onclick="closeTraceModal()">CLOSE</button>
 
     <p class="small">
-      Placeholder only. Later this connects to your Google Form or mailing list.
+      You will be taken to a short JULEELAND form.
     </p>
   </div>
 </div>
@@ -344,7 +286,7 @@
 
     <button onclick="showIntro()">BEGIN THE DRIFT</button>
 
-    <button class="seed-registry" onclick="openSeedRegistry()" title="Seed Registry">
+    <button class="trace-button" onclick="openTraceModal()" title="Leave a Trace">
       ✦
     </button>
   </section>
@@ -361,17 +303,19 @@
 
   <section id="firstScene" class="hidden">
     <div class="story-text">
-      A seed lands in your hand.<br>
+      A trace appears in your palm.<br>
       Somewhere above you, the sky turns pink.
     </div>
-    <button onclick="alert('Soon: Follow the seed.')">FOLLOW THE SEED</button>
-    <button onclick="alert('Soon: Let it go.')">LET IT GO</button>
-    <button onclick="alert('Soon: Ask where it came from.')">ASK WHERE IT CAME FROM</button>
+    <button onclick="alert('Soon: Follow the trace.')">FOLLOW THE TRACE</button>
+    <button onclick="alert('Soon: Hide your hand.')">HIDE YOUR HAND</button>
+    <button onclick="alert('Soon: Ask what found you.')">ASK WHAT FOUND YOU</button>
   </section>
 
 </main>
 
 <script>
+const traceFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdUoOszwW4t2PbtscqVss7tdasc43oqB_EJ_BuLqCLLHAbLxA/viewform?usp=send_form";
+
 const floatingSeed = (x, y) => `
   <g>
     <path class="trail" d="M${x} ${y} C${x - 12} ${y - 40}, ${x + 18} ${y - 78}, ${x + 48} ${y - 118}" />
@@ -467,17 +411,16 @@ function showFirstScene() {
   document.getElementById("firstScene").classList.remove("hidden");
 }
 
-function openSeedRegistry() {
-  document.getElementById("seedModal").classList.add("open");
+function openTraceModal() {
+  document.getElementById("traceModal").classList.add("open");
 }
 
-function closeSeedRegistry() {
-  document.getElementById("seedModal").classList.remove("open");
+function closeTraceModal() {
+  document.getElementById("traceModal").classList.remove("open");
 }
 
-function fakeSignup() {
-  alert("A Wish Keeper has recorded your journey.");
-  closeSeedRegistry();
+function openTraceForm() {
+  window.open(traceFormUrl, "_blank");
 }
 </script>
 
