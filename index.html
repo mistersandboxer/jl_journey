@@ -69,7 +69,7 @@
     overflow: visible;
   }
 
-  .stem, .seed, .trail, .fluff, .shard-line {
+  .stem, .seed, .trail, .fluff, .shard-line, .hand-line, .sparkle-line {
     fill: none;
     stroke: currentColor;
     stroke-width: 3;
@@ -175,7 +175,23 @@
   }
 
   .ending-shard.ask {
-    animation: shardAnswer 3.8s ease-in-out infinite;
+    animation: shardSneeze 3.4s ease-in-out infinite;
+  }
+
+  .sparkle-burst {
+    opacity: 0;
+    transform-origin: 45px 57px;
+    animation: sparkleBurst 3.4s ease-in-out infinite;
+  }
+
+  .shard-face {
+    opacity: 0;
+    animation: facePeek 3.4s ease-in-out infinite;
+  }
+
+  .hand-glow {
+    opacity: .25;
+    animation: handGlow 3s ease-in-out infinite;
   }
 
   button {
@@ -355,18 +371,38 @@
 
   @keyframes shardLead {
     0%, 100% { transform: translate(0,0) rotate(-4deg); }
-    50% { transform: translate(24px,-18px) rotate(8deg); }
+    25% { transform: translate(22px,-12px) rotate(8deg); }
+    50% { transform: translate(34px,-20px) rotate(-3deg); }
+    75% { transform: translate(12px,-10px) rotate(7deg); }
   }
 
   @keyframes shardLeak {
-    0%, 100% { opacity: .7; transform: scale(.9); filter: drop-shadow(0 0 8px rgba(255,95,200,.7)); }
-    50% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 22px rgba(255,95,200,1)); }
+    0%, 100% { opacity: .75; transform: scale(.92); filter: drop-shadow(0 0 8px rgba(255,95,200,.7)); }
+    50% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 24px rgba(255,95,200,1)); }
   }
 
-  @keyframes shardAnswer {
-    0%, 100% { transform: rotate(-5deg) scale(1); }
-    33% { transform: rotate(8deg) scale(1.08); }
-    66% { transform: rotate(-2deg) scale(.96); }
+  @keyframes shardSneeze {
+    0%, 100% { transform: rotate(-3deg) scale(1); }
+    30% { transform: rotate(4deg) scale(.95); }
+    45% { transform: rotate(-5deg) scale(1.12); }
+    55% { transform: rotate(3deg) scale(.92); }
+    70% { transform: rotate(0deg) scale(1.03); }
+  }
+
+  @keyframes sparkleBurst {
+    0%, 38%, 100% { opacity: 0; transform: scale(.3); }
+    50% { opacity: 1; transform: scale(1.15); }
+    70% { opacity: .25; transform: scale(1.6); }
+  }
+
+  @keyframes facePeek {
+    0%, 22%, 100% { opacity: 0; }
+    28%, 62% { opacity: 1; }
+  }
+
+  @keyframes handGlow {
+    0%, 100% { opacity: .18; transform: scale(.96); }
+    50% { opacity: .55; transform: scale(1.08); }
   }
 
   @keyframes sway {
@@ -499,6 +535,37 @@ const shardSVG = `
 </svg>
 `;
 
+const shardAskSVG = `
+<svg viewBox="0 0 90 110" aria-label="pink sky shard sneezing sparkles">
+  <path class="shard-line" d="M45 12 L58 47 L82 57 L58 67 L45 100 L32 67 L8 57 L32 47 Z" />
+  <path class="trail" d="M45 8 C38 0, 33 -8, 30 -18" />
+  <circle class="seed" cx="45" cy="57" r="4" />
+
+  <g class="shard-face">
+    <circle cx="37" cy="52" r="2.2" fill="currentColor" />
+    <circle cx="53" cy="52" r="2.2" fill="currentColor" />
+    <path class="sparkle-line" d="M39 64 C43 68, 48 68, 52 64" />
+  </g>
+
+  <g class="sparkle-burst">
+    <path class="sparkle-line" d="M20 38 L14 32" />
+    <path class="sparkle-line" d="M70 38 L78 31" />
+    <path class="sparkle-line" d="M22 78 L14 86" />
+    <path class="sparkle-line" d="M70 78 L80 86" />
+    <circle class="seed" cx="18" cy="58" r="2.5" />
+    <circle class="seed" cx="72" cy="58" r="2.5" />
+  </g>
+</svg>
+`;
+
+const shardHideSVG = `
+<svg viewBox="0 0 100 110" aria-label="pink shard hidden in hand">
+  <circle class="hand-glow" cx="50" cy="58" r="30" fill="currentColor" />
+  <path class="hand-line" d="M25 70 C32 45, 43 38, 50 52 C58 35, 70 45, 62 66 C75 62, 80 72, 69 82 C58 92, 40 91, 29 80 C25 76, 24 73, 25 70 Z" />
+  <path class="shard-line" d="M50 40 L56 55 L68 60 L56 65 L50 80 L44 65 L32 60 L44 55 Z" />
+</svg>
+`;
+
 const dandelionSVG = `
 <svg viewBox="0 0 520 620" aria-label="Animated black line dandelion">
   <g class="dandelion-whole">
@@ -597,22 +664,25 @@ function showEnding(path) {
 
   const endings = {
     follow: {
-      text: "The pink shard lifts from your palm.<br>It does not fly away.<br>It waits for you to follow.",
-      className: "pink-shard ending-shard follow"
+      text: "The shard zips ahead.<br>Then it stops and waits.<br>Apparently, it wants to be followed.",
+      className: "pink-shard ending-shard follow",
+      art: shardSVG
     },
     hide: {
-      text: "You close your hand.<br>The pink light leaks between your fingers.<br>Something on the other side notices.",
-      className: "pink-shard ending-shard hide"
+      text: "You close your hand around the shard.<br>Pink light leaks between your fingers.<br>Your pocket starts glowing too.",
+      className: "pink-shard ending-shard hide",
+      art: shardHideSVG
     },
     ask: {
-      text: "You ask what it is.<br>The shard answers without words.<br>The sky above you begins to remember.",
-      className: "pink-shard ending-shard ask"
+      text: "You ask what it is.<br>The shard thinks for a moment.<br>Then it sneezes pink sparkles.",
+      className: "pink-shard ending-shard ask",
+      art: shardAskSVG
     }
   };
 
   document.getElementById("endingText").innerHTML = endings[path].text;
   document.getElementById("endingArt").className = endings[path].className;
-  document.getElementById("endingArt").innerHTML = shardSVG;
+  document.getElementById("endingArt").innerHTML = endings[path].art;
   createMotes("endingMotes", 22);
   showResetButton();
   document.getElementById("ending").classList.remove("hidden");
